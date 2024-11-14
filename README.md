@@ -1,7 +1,7 @@
-# zit - A `ls` Alternative for Windows
+# zix - A `ls` Alternative for Windows (AT THE MOMENT)
 
 ## Overview
-`zit` is a simple and fast alternative to the traditional Unix `ls` command, designed specifically for Windows. It lists directory contents with a focus on speed and simplicity, aiming to improve the user experience in Windows environments.
+`zix` is a simple and fast alternative to the traditional Unix `ls` command, designed specifically for Windows. It lists directory contents with a focus on speed and simplicity, aiming to improve the user experience in Windows environments.
 
 ## Features
 - **Fast directory listing**
@@ -11,18 +11,18 @@
 
 ## Installation
 ```bash
-cargo install zit
+cargo install zix
 ```
 
 ## Usage
 Basic usage:
 ```bash
-zit [options] [directory]
+zx [options] [directory]
 ```
 
 Example:
 ```bash
-zit -l
+zx -l
 ```
 git
 ## Options
