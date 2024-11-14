@@ -1,7 +1,13 @@
 [package]
 name = "zix"
-version = "0.1.0"
+version = "0.0.2"
 edition = "2021"
+
+description = "A simple and fast alternative to the traditional Unix `ls` command, designed specifically for Windows."
+license = "MIT"
+
+authors = ["Arki"]
+repository = "https://github.com/arkeasz/zix"
 
 [[bin]]
 name = "zx"
