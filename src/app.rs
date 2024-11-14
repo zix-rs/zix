@@ -1,5 +1,4 @@
 use std::fs;
-use std::ops::Index;
 use std::os::windows::fs::MetadataExt;
 use chrono::{DateTime, Local};
 use crate::parser::{parse, Opti};

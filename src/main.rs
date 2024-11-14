@@ -1,10 +1,8 @@
 pub mod app;
 pub mod ref_command;
 pub mod parser;
-use std::{env, fmt::format};
 use app::App;
 use parser::Opti;
-use ref_command::*;
 
 fn main() {
     if let Some(app) = App::init() {
