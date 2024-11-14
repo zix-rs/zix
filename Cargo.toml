@@ -1,9 +1,11 @@
 [package]
-name = "zit"
+name = "zix"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "zx"
+path = "src/main.rs"
 
 [dependencies]
 chrono = "0.4.38"
