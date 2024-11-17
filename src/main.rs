@@ -1,67 +1,45 @@
+pub mod grid;
 pub mod app;
 pub mod ref_command;
 pub mod parser;
 pub mod window;
 use app::App;
+use grid::prgrid;
 use parser::Opti;
-use window::get_terminal_size;
 
 fn main() {
     if let Some(app) = App::init() {
-        let (term_width, _) = get_terminal_size();
-
-        let mut column_widths = vec![];
         let items = app.entries;
-        for item in &items{
-            column_widths.push(item.name.len());
+        let ops = app.options;
+        let mut vect_entry_name: Vec<String> = Vec::new();
+
+        for na in &items   {
+            vect_entry_name.push(na.name.to_string());
         }
 
-        let max_item_len = *column_widths.iter().max().unwrap_or(&0) + 2;
-        let columns = term_width as usize / max_item_len;
-
         if app.dirs.is_empty()  {
-            for (i, entry) in items.iter().enumerate()   {
-
-                if app.options.contains(&Opti::List)  {
-                    println!(
-                        "{:<6} \t {:<19} {:>8} {}",
-                        entry.mode, entry.last_modified, entry.lenght, entry.name
-                    );
-                } else {
-                    print!("{:width$}", entry.name, width = max_item_len);
-
-                    if (i + 1) % columns == 0 {
-                        println!();
-                    }
-                }
+            if ops.contains(&Opti::List)    {
+                prgrid::list(ops, items);
+            } else {
+                prgrid::base(vect_entry_name.clone());
             }
 
-            if items.len() % columns != 0 {
-                println!();
-            }
         } else {
             for dir in &app.dirs {
-                for (i, entry) in items.iter().enumerate()    {
+                for entry in items.iter()    {
                     if dir == &entry.father  {
-                        if app.options.contains(&Opti::List)  {
+                        if ops.contains(&Opti::List)  {
                             println!(
                                 "{:<6} \t {:<19} {:>8} {}",
                                 entry.mode, entry.last_modified, entry.lenght, entry.name
                             );
-                        } else {
-                            print!("{:width$}", entry.name, width = max_item_len);
-
-                            if (i + 1) % columns == 0 {
-                                println!();
-                            }
-
                         }
                     }
 
                 }
             }
-            if items.len() % columns != 0 {
-                println!();
+            if !ops.contains(&Opti::List)    {
+                prgrid::base(vect_entry_name.clone());
             }
         }
     } else {
