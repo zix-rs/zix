@@ -1,39 +1,46 @@
+pub mod grid;
+pub mod entry;
 pub mod app;
 pub mod ref_command;
 pub mod parser;
+pub mod window;
 use app::App;
+use grid::prgrid;
 use parser::Opti;
 
 fn main() {
     if let Some(app) = App::init() {
+        let items = app.entries;
+        let ops = app.options;
+        let mut vect_entry_name: Vec<&str> = Vec::new();
+
+        for na in &items   {
+            vect_entry_name.push(&na.name);
+        }
+
         if app.dirs.is_empty()  {
-            for entry in app.entries    {
-                if app.options.contains(&Opti::List)  {
-                    println!(
-                        "{:<6} \t {:<19} {:>8} {}",
-                        entry.mode, entry.last_modified, entry.lenght, entry.name
-                    );
-                } else {
-                    print!("{} \t", entry.name)
-                }
+            if ops.contains(&Opti::List)    {
+                prgrid::list(ops, items);
+            } else {
+                prgrid::base(&vect_entry_name, &items);
             }
-            print!("a")
+
         } else {
             for dir in &app.dirs {
-                for entry in &app.entries    {
-                    if dir == &entry.father  {
-                        if app.options.contains(&Opti::List)  {
+                for entry in items.iter()    {
+                    // if dir == &entry.father  {
+                        if ops.contains(&Opti::List)  {
                             println!(
                                 "{:<6} \t {:<19} {:>8} {}",
                                 entry.mode, entry.last_modified, entry.lenght, entry.name
                             );
-                        } else {
-                            print!("{} \t", entry.name)
                         }
-                    }
+                    // }
 
                 }
-                println!("")
+            }
+            if !ops.contains(&Opti::List)    {
+                prgrid::base(&vect_entry_name, &items);
             }
         }
     } else {
