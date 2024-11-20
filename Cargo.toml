@@ -1,6 +1,6 @@
 [package]
 name = "zix"
-version = "0.0.2"
+version = "0.0.3"
 edition = "2021"
 
 description = "A simple and fast alternative to the traditional Unix `ls` command, designed specifically for Windows."
