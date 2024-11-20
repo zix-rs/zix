@@ -1,9 +1,10 @@
-pub mod prgrid  {
-    use crate::app::Entry;
-    use crate::parser::Opti;
-    use crate::window::get_terminal_size;
-    use unicode_width::UnicodeWidthStr;
+use crate::entry::{Entry, EntryKind};
+use crate::parser::Opti;
+use crate::window::get_terminal_size;
+use unicode_width::UnicodeWidthStr;
 
+pub mod prgrid  {
+    use super::*;
     pub enum Format {
         List,
         Base
@@ -20,17 +21,16 @@ pub mod prgrid  {
         }
     }
 
-    pub fn base(ve: Vec<String>)  {
+    pub fn base(ve: &Vec<&str>, entries: &Vec<Entry>)  {
         let max_width = ve
         .iter()
-        .map(|name| UnicodeWidthStr::width(name.as_str()))
+        .map(|name| UnicodeWidthStr::width(*name))
         .max()
         .unwrap_or(0)
         + 2;
 
         let (term_width, _) = get_terminal_size();
 
-            println!("{}", term_width);
         let w =  if term_width >= 80 {
                         <u16 as Into<usize>>::into(term_width) - 20
                         } else {
@@ -39,7 +39,17 @@ pub mod prgrid  {
         let columns = w / max_width;
 
         for (i, name) in ve.iter().enumerate() {
-            print!("{:<width$}", name, width = max_width);
+            match entries[i].entry_kind {
+                EntryKind::Archive  => { print!("{:<width$}", name, width = max_width) },
+                EntryKind::Directory => { print!("{:<width$}", name, width = max_width) },
+                EntryKind::Config  => { print!("{:<width$}", name, width = max_width) },
+                EntryKind::Executable  => { print!("{:<width$}", name, width = max_width) },
+                EntryKind::File  => { print!("{:<width$}", name, width = max_width) },
+                EntryKind::Hidden  => { print!("{:<width$}", name, width = max_width) },
+                EntryKind::Symlink  => { print!("{:<width$}", name, width = max_width) },
+                _ => print!("{:<width$}", name, width = max_width)
+            }
+
             if (i + 1) % columns == 0 {
                 println!();
             }
