@@ -1,6 +1,6 @@
 
 pub const NAME: &str = "zit";
-pub const VERSION: &str = "v0.0.1";
+pub const VERSION: &str = "v0.0.3";
 pub const HELP: &str = r#"Usage:
     fac <option> <directory>
 
