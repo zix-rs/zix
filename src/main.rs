@@ -18,32 +18,10 @@ fn main() {
             vect_entry_name.push(&na.name);
         }
 
-        if app.dirs.is_empty()  {
-            if ops.contains(&Opti::List)    {
-                prgrid::list(ops, items);
-            } else {
-                prgrid::base(&vect_entry_name, &items);
-            }
-
+        if ops.contains(&Opti::List)    {
+            prgrid::list( &items);
         } else {
-            for dir in &app.dirs {
-                for entry in items.iter()    {
-                    // if dir == &entry.father  {
-                        if ops.contains(&Opti::List)  {
-                            println!(
-                                "{:<6} \t {:<19} {:>8} {}",
-                                entry.mode, entry.last_modified, entry.lenght, entry.name
-                            );
-                        }
-                    // }
-
-                }
-            }
-            if !ops.contains(&Opti::List)    {
-                prgrid::base(&vect_entry_name, &items);
-            }
+            prgrid::base(&vect_entry_name, &items);
         }
-    } else {
-        return;
     }
 }

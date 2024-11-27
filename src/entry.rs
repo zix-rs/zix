@@ -18,7 +18,7 @@ pub enum EntryKind {
 
 #[derive(Clone, Debug)]
 pub struct Entry    {
-    pub mode: &'static str,
+    pub mode: String,
     pub last_modified: String,
     pub name: String,
     pub lenght: u64,
@@ -29,7 +29,7 @@ pub struct Entry    {
 impl Entry  {
     pub fn new() -> Entry {
         Entry {
-            mode: "",
+            mode: String::new(),
             last_modified: String::new(),
             name: String::new(),
             lenght: 0,
@@ -54,13 +54,13 @@ pub fn create_entry(path: &PathBuf) -> Option<Entry> {
     entry_dir.lenght = meta.len();
 
     let permissions = meta.permissions();
-    entry_dir.mode = match (meta.is_dir(), meta.is_file(), permissions.readonly()) {
-        (true, _, true) => "dr-r",
-        (true, _, false) => "dr--",
-        (false, true, true) => "ar-r",
-        (false, true, false) => "ar--",
-        _ => "----",
-    };
+    entry_dir.mode = format!(
+        "{}{}{}{}",
+        if meta.is_dir() { "d" } else {"-"},
+        if meta.is_file() { "a" } else {"-"},
+        if permissions.readonly() { "r" } else { "-" },
+        "-"
+    );
 
     let modified_time = meta.modified().ok()?;
     let datetime: DateTime<Local> = modified_time.into();
@@ -74,19 +74,19 @@ pub fn create_entry_for_dir(dir_entry: &DirEntry, optis: &Vec<Opti>) -> Option<E
     let mut entry_dir = Entry::new();
     if let Some(filename) = dir_entry.file_name().to_str()    {
         if filename.starts_with('.') && !optis.contains(&Opti::All) {
-            return None; // Ignora archivos ocultos si no se pasa la opción `Opti::All`
+            return None;
         }
 
         if let Ok(metadata) = fs::metadata(dir_entry.path())    {
             entry_dir.lenght = metadata.file_size();
             let permissions = metadata.permissions();
-            entry_dir.mode = match (metadata.is_dir(), metadata.is_file(), permissions.readonly()) {
-                (true, _, true) => "dr-r",
-                (true, _, false) => "dr--",
-                (false, true, true) => "ar-r",
-                (false, true, false) => "ar--",
-                (false, false, _) => "----",
-            };
+            entry_dir.mode = format!(
+                "{}{}{}{}",
+                if metadata.is_dir() { "d" } else {"-"},
+                if metadata.is_file() { "a" } else {"-"},
+                if permissions.readonly() { "r" } else { "-" },
+                "-"
+            );
             if let Ok(modified_time) = metadata.modified()  {
                 let datetime: DateTime<Local> = modified_time.into();
                 entry_dir.last_modified = datetime.format("%d/%m/%Y\t%H:%M").to_string()
