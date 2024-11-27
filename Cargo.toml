@@ -9,6 +9,12 @@ license = "MIT"
 authors = ["Arki"]
 repository = "https://github.com/arkeasz/zix"
 
+[profile.dev]
+opt-level = 0
+
+[profile.release]
+opt-level = 3
+
 [[bin]]
 name = "zx"
 path = "src/main.rs"
