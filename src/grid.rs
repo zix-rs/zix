@@ -1,4 +1,4 @@
-use crate::entry::{Entry, EntryKind};
+use crate::entry::Entry;
 use crate::window::get_terminal_size;
 use unicode_width::UnicodeWidthStr;
 use regex;
