@@ -21,7 +21,7 @@ fn main() {
         if ops.contains(&Opti::List)    {
             prgrid::list( &items);
         } else {
-            prgrid::base(&vect_entry_name, &items);
+            prgrid::base(&vect_entry_name);
         }
     }
 }
