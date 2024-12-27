@@ -1,7 +1,12 @@
-use crate::entry::Entry;
+use crate::entry::{
+    Entry,
+    EntryKind
+};
 use crate::window::get_terminal_size;
 use unicode_width::UnicodeWidthStr;
 use regex;
+use colored::Colorize;
+
 pub mod prgrid  {
     use super::*;
     pub enum Format {
@@ -24,15 +29,37 @@ pub mod prgrid  {
     }
 
     pub fn list(items: &[Entry])   {
+        let mut i = 0;
+
+        let data = vec![
+            "4.00 KB",
+            "1 B",
+            "4.22 KB",
+            "431 B",
+        ];
+
+        let max_length = items.iter().map(|s| s.lenght.len()).max().unwrap_or(0);
+
+
         for entry in items.iter()   {
-                println!(
-                    "{:<6} \t {:<19} {:>8} {}",
-                    entry.mode, entry.last_modified, entry.lenght, entry.name
-                );
+                let v: Vec<&str> = entry.last_modified.split('\t').collect();
+                match entry.entry_kind  {
+                    EntryKind::Symlink => {
+                        let symln = entry.symlink.to_string_lossy().replace("\\", "/");
+                        println!(
+                            "{:<6} \t {:<19} \t {:>width$}   {} → {}",
+                            entry.mode, format!("{}   {}", v[0].yellow(), v[1].green()), entry.lenght, entry.name, symln, width = max_length)
+                        },
+                    _ => {
+                        println!(
+                            "{:<6} \t {:<19} \t {:>width$}   {}",
+                            entry.mode, format!("{}   {}", v[0].yellow(), v[1].green()), entry.lenght, entry.name, width = max_length)
+                    }
+                };
         }
     }
 
-    pub fn base(ve: &Vec<&str>) {
+    pub fn base(ve: Vec<String>, items: &[Entry]) {
         let stripped_names: Vec<String> = ve.iter().map(|name| strip_ansi_codes(name)).collect();
         let max_width = stripped_names
             .iter()
@@ -55,11 +82,25 @@ pub mod prgrid  {
                 grid[col].push(name.clone());
             }
             column_widths[col] = column_widths[col].max(UnicodeWidthStr::width(name.as_str()));
+
         }
+        let mut i = 0;
         for row in 0..rows {
             for col in 0..columns {
-                if let Some(name) = grid[col].get(row) {
-                    print!("{:<width$}", name, width = column_widths[col] + 5);
+                if let Some(_) = grid[col].get(row) {
+                    match items[i].entry_kind {
+                        EntryKind::Archive =>   {
+                            print!(" {:<width$} ", items[i].name, width = column_widths[col] + 5);
+                        },
+                        EntryKind::Directory => {
+                            print!(" {:<width$} ", items[i].name.clone().green(), width = column_widths[col] + 5);
+                        },
+                        _ => {
+                            print!(" {:<width$} ", items[i].name, width = column_widths[col] + 5);
+                        }
+                    }
+                    i += 1;
+
                 }
             }
             println!();
