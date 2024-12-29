@@ -29,16 +29,7 @@ pub mod prgrid  {
     }
 
     pub fn list(items: &[Entry])   {
-        let mut i = 0;
-
-        let data = vec![
-            "4.00 KB",
-            "1 B",
-            "4.22 KB",
-            "431 B",
-        ];
-
-        let max_length = items.iter().map(|s| s.lenght.len()).max().unwrap_or(0);
+         let max_length = items.iter().map(|s| s.lenght.len()).max().unwrap_or(0);
 
 
         for entry in items.iter()   {
