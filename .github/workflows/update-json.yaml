@@ -1,0 +1,40 @@
+name: Update Installer
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  update-installer-json:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone the repository
+        uses: actions/checkout@v3
+
+      - name: Set new version
+        id: set-version
+        run: |
+          VERSION=${{ github.event.release.tag_name }}
+          FILE_URL="https://github.com/${{ github.repository }}/releases/download/$VERSION/zx.exe"
+          echo "version=$VERSION" >> $GITHUB_ENV
+          echo "file_url=$FILE_URL" >> $GITHUB_ENV
+
+      - name: Update zix.json file
+        run: |
+          VERSION=${{ env.version }}
+          FILE_URL=${{ env.file_url }}
+
+          jq --arg version "$VERSION" --arg url "$FILE_URL" \
+          '.dist-version.latest = $version | .versions[$version] = {url: $url}' \
+          zix.json > zix-updated.json
+
+          mv zix-updated.json zix.json
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git add zix.json
+          git commit -m "Update zix.json for version ${{ env.version }}"
+          git push
