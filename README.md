@@ -11,11 +11,6 @@
 - **Lightweight and efficient**
 
 ## Installation
-Aquí tienes la sección de instalación actualizada con los detalles adicionales para `cargo`, `PowerShell` y el ejecutable en la release:
-
----
-
-## Installation
 
 ### Using the Installer Executable (Recommended)
 The easiest way to install zix is by downloading the installer executable from the GitHub Releases page.
