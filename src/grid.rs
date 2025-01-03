@@ -1,6 +1,6 @@
 use crate::entry::{
-    Entry,
-    EntryKind
+    create::Entry,
+    kind::EntryKind
 };
 use crate::window::get_terminal_size;
 use unicode_width::UnicodeWidthStr;
@@ -8,6 +8,8 @@ use regex;
 use colored::Colorize;
 
 pub mod prgrid  {
+    use crate::parser::Opti;
+
     use super::*;
     pub enum Format {
         List,
@@ -20,34 +22,59 @@ pub mod prgrid  {
     }
 
     fn adjust_terminal_width(term_width: u16) -> usize  {
-        if term_width >= 80 {
-            <u16 as Into<usize>>::into(term_width) - 20
+        let adjusted_width = if term_width >= 80 {
+            term_width.saturating_sub(20)
         } else {
-            <u16 as Into<usize>>::into(term_width)
-        }
-
+            term_width
+        };
+        adjusted_width.max(1).into()
     }
 
-    pub fn list(items: &[Entry])   {
-         let max_length = items.iter().map(|s| s.lenght.len()).max().unwrap_or(0);
+    pub fn list(items: &[Entry], op: Vec<Opti>)   {
+        let max_length = items.iter().map(|s| s.lenght.len()).max().unwrap_or(1) + 5;
 
+        let mut output = String::new();
+
+        if op.contains(&Opti::Headers)  {
+            println!(
+                "{:<6} {:<15} {:<7} {}",
+                "Mode".bold(), "Last Modified".bold(), "Size".bold(), "Name".bold())
+        }
 
         for entry in items.iter()   {
                 let v: Vec<&str> = entry.last_modified.split('\t').collect();
                 match entry.entry_kind  {
+                    EntryKind::Hidden => {
+                        output.push_str(
+                    &format!(
+                            "{:<6} {:<19} {:>width$} {}\n",
+                            entry.mode, format!("{} {}", v[0].yellow(), v[1].green()), entry.lenght.bold(), entry.name.bright_red().bold(), width = max_length)
+                        );
+                    },
+                    EntryKind::Directory => {
+                        output.push_str(&format!(
+                            "{:<6} {:<19} {:>width$} {}\n",
+                            entry.mode, format!("{} {}", v[0].yellow(), v[1].green()), entry.lenght.bold(), entry.name.bright_green().bold(), width = max_length)
+                        )
+                    },
                     EntryKind::Symlink => {
                         let symln = entry.symlink.to_string_lossy().replace("\\", "/");
-                        println!(
-                            "{:<6} \t {:<19} \t {:>width$}   {} → {}",
-                            entry.mode, format!("{}   {}", v[0].yellow(), v[1].green()), entry.lenght, entry.name, symln, width = max_length)
+                        output.push_str(
+                        &format!(
+                            "{:<6} {:<19} {:>width$} {} → {}\n",
+                            entry.mode, format!("{} {}", v[0].yellow(), v[1].green()), entry.lenght.bold(), entry.name, symln, width = max_length)
+                            )
                         },
                     _ => {
-                        println!(
-                            "{:<6} \t {:<19} \t {:>width$}   {}",
-                            entry.mode, format!("{}   {}", v[0].yellow(), v[1].green()), entry.lenght, entry.name, width = max_length)
+                        output.push_str(&format!(
+                            "{:<6} {:<19} {:>width$} {}\n",
+                            entry.mode, format!("{} {}", v[0].yellow(), v[1].green()), entry.lenght.bold(), entry.name, width = max_length)
+                        )
                     }
                 };
         }
+
+        println!("{}", output)
     }
 
     pub fn base(ve: Vec<String>, items: &[Entry]) {
@@ -61,7 +88,7 @@ pub mod prgrid  {
 
         let (term_width, _) = get_terminal_size();
         let w = adjust_terminal_width(term_width);
-        let columns = w / max_width.max(1);
+        let columns = (w / max_width.max(1)).max(1);
         let rows = (ve.len() + columns - 1) / columns;
 
         let mut column_widths = vec![0; columns];
