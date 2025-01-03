@@ -1,9 +1,7 @@
 use std::{
     fs::{
         self,
-        DirEntry,
-        Metadata,
-        Permissions
+        DirEntry
     },
     path::PathBuf
 };
@@ -16,17 +14,7 @@ use colored::*;
 
 use crate::parser::Opti;
 
-#[derive(Clone, Debug)]
-pub enum EntryKind {
-    File,       // File
-    Directory,  // Dir
-    Symlink,    // Symbol Link
-    Hidden,     // Hidden
-    Executable, // .exe .app
-    Archive,    // zip, tar, etc
-    Config,     // config files
-    Other,      // other
-}
+use super::{kind::EntryKind, utils::{entry_mode, format_file_size, is_executable}};
 
 #[derive(Clone, Debug)]
 pub struct Entry    {
@@ -53,56 +41,9 @@ impl Entry  {
     }
 }
 
-pub fn is_executable(filename: &str, _metadata: &fs::Metadata) -> bool {
-    if filename.ends_with(".exe") || filename.ends_with(".bat") || filename.ends_with(".cmd") {
-        return true;
-    }
-    false
-}
-
-fn format_file_size(bytes: u64) -> String {
-    const KB: u64 = 1024;
-    const MB: u64 = KB * 1024;
-    const GB: u64 = MB * 1024;
-
-    if bytes >= GB {
-        format!("{:.2} {}", bytes as f64 / GB as f64, "GB".bright_yellow())
-    } else if bytes >= MB {
-        format!("{:.2} {}", bytes as f64 / MB as f64, "MB".bright_cyan())
-    } else if bytes >= KB {
-        format!("{:.2} {}", bytes as f64 / KB as f64, "KB".bright_magenta())
-    } else {
-        format!("{} {}", bytes, "B".bright_red())
-    }
-}
 
 
-fn entry_mode(meta: Metadata, perm: Permissions) -> String   {
-    let mut mode = String::new();
-    if cfg!(target_os = "windows")  {
-        mode = format!(
-            "{}{}{}",
-            if meta.is_dir() {
-                "d".bright_blue()
-            } else {
-                "-".normal()
-            },
-            if meta.is_file() {
-                "a".bright_black()
-            } else {
-                "-".normal()
-            },
-            if perm.readonly() {
-                "r-".bright_yellow()
-            } else {
-                "rw".normal()
-            }
-        );
-    }
-    return mode
-}
-
-pub fn create_entry(path: &PathBuf) -> Option<Entry> {
+pub fn filter_dir(path: &PathBuf) -> Option<Entry> {
     let meta = fs::metadata(path).ok()?;
 
     let mut entry_dir = Entry::new();
@@ -120,7 +61,7 @@ pub fn create_entry(path: &PathBuf) -> Option<Entry> {
 }
 
 
-pub fn create_entry_for_dir(dir_entry: &DirEntry, optis: &Vec<Opti>) -> Option<Entry> {
+pub fn dir(dir_entry: &DirEntry, optis: &Vec<Opti>) -> Option<Entry> {
     let mut entry_dir = Entry::new();
     if let Some(filename) = dir_entry.file_name().to_str()    {
         if filename.starts_with('.') && !optis.contains(&Opti::All) {
@@ -128,7 +69,11 @@ pub fn create_entry_for_dir(dir_entry: &DirEntry, optis: &Vec<Opti>) -> Option<E
         }
 
         if let Ok(metadata) = fs::metadata(dir_entry.path())    {
-            entry_dir.lenght = format_file_size(metadata.file_size());
+            entry_dir.lenght = if metadata.is_dir() {
+                format!("{}", "-".bright_white())
+            } else {
+                format_file_size(metadata.file_size())
+            };
             let permissions = metadata.permissions();
 
             entry_dir.mode = entry_mode(metadata.clone(), permissions);
