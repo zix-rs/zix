@@ -1,18 +1,26 @@
 
 pub const NAME: &str = "zit";
 pub const VERSION: &str = "v0.0.3";
-pub const HELP: &str = r#"Usage:
-    fac <option> <directory>
+pub const HELP: &str = r#"USAGE:
+    fac <option> <files...>
 
-    Options:
-        [--help, -h]
-            print help
-        [--version, -v]
-            print command version
-        [--list -l]
-            detailed list format
-        [--all, -a]
-            include hidden files
+META OPTIONS:
+    [--help, -?]
+        print help
+    [--version, -v]
+        show version of six
+
+DISPLAY OPTIONS:
+    [--list -l]
+        detailed list format
+
+FILTERING AND SORTING OPTIONS:
+    [--all, -a]
+        show hidden and 'dot' files
+
+LONG VIEW OPTIONS
+    [--headers, -h]
+        add a header row to each column
 "#;
 
 pub fn help()   {

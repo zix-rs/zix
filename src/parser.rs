@@ -5,7 +5,9 @@ pub enum Opti   {
     All,
     List,
     Help,
-    Version
+    Version,
+    Headers,
+    Icons
 }
 
 pub fn parse() -> (Vec<String>, Vec<String>)  {

@@ -1,6 +1,6 @@
 use std::fs;
 
-use crate::entry::{create_entry, create_entry_for_dir, Entry};
+use crate::entry::create::{Entry, self};
 use crate::parser::{parse, Opti};
 use crate::ref_command::*;
 use glob::glob;
@@ -27,11 +27,15 @@ impl App    {
         let mut entries: Vec<Entry> = Vec::new();
         for op in options   {
             match op.as_str()    {
-                "--help" | "-h" => { help(); return None},
+                "--help" | "-?" => { help(); return None},
+                "--headers" | "-h" => app.options.push(Opti::Headers),
                 "--version" | "-v" => { version(); return None},
                 "--all" | "-a" => app.options.push(Opti::All),
                 "--list" | "-l" => app.options.push(Opti::List),
-                _ => todo!()
+                _ => {
+                    println!("'{}' does not exist\n Type 'zx --help' for more information", op);
+                    return None
+                }
             }
         }
 
@@ -41,7 +45,7 @@ impl App    {
                     entries.extend(
                         paths
                             .filter_map(Result::ok)
-                            .filter_map(|path| create_entry(&path))
+                            .filter_map(|path| create::filter_dir(&path))
                     );
                 }
 
@@ -50,7 +54,7 @@ impl App    {
                     entries.extend(
                         dir
                                 .filter_map(Result::ok)
-                                .filter_map(|path| create_entry_for_dir(&path, &app.options))
+                                .filter_map(|path| create::dir(&path, &app.options))
                     );
                } else {
                    continue;
