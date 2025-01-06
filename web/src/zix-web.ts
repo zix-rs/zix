@@ -79,13 +79,13 @@ export class ZixWeb extends LitElement  {
     render() {
         return html`
             <header>
-                <a class="social" href="#">
+                <a class="social" href="https://twitter.com/arkeazs">
                     <p>TWITTER</p>
-                    <img src="/twitter.svg" alt="twitter">
+                    <img src="/zix/twitter.svg" alt="twitter">
                 </a>
-                <a class="social" href="#">
+                <a class="social" href="https://github.com/arkeasz/zix/">
                     <p>GITHUB</p>
-                    <img src="/github.svg" alt="github">
+                    <img src="/zix/github.svg" alt="github">
                 </a>
             </header>
             <main>main</main>
