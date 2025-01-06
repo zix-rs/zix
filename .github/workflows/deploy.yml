@@ -19,13 +19,15 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
+        working-directory: web
         run: npm install
 
       - name: Build the project
+        working-directory: web
         run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: web/dist
