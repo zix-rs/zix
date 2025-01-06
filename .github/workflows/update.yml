@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Clone the repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags
 
       - name: Set new version
         id: set-version
@@ -23,7 +25,10 @@ jobs:
 
       - name: Initialize JSON structure if necessary
         run: |
-          jq 'if .dist-version == null then . + {"dist-version": {"latest": ""}} else . end |
+          if [ ! -f zix.json ]; then
+            echo '{}' > zix.json
+          fi
+          jq 'if .["dist-version"] == null then . + {"dist-version": {"latest": ""}} else . end |
               if .versions == null then . + {"versions": {}} else . end' zix.json > zix-temp.json
           mv zix-temp.json zix.json
 
@@ -39,7 +44,7 @@ jobs:
           echo "File URL: $FILE_URL"
 
           jq --arg version "$VERSION" --arg url "$FILE_URL" \
-            '.dist-version.latest = $version | .versions[$version] = {url: $url}' \
+            '.["dist-version"].latest = $version | .versions[$version] = {url: $url}' \
             zix.json > zix-updated.json
 
           mv zix-updated.json zix.json
@@ -47,6 +52,7 @@ jobs:
       - name: Commit and push changes
         run: |
           git config user.name "GitHub Actions Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add zix.json
           git commit -m "Update zix.json for version ${{ env.version }}"
           git push
