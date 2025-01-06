@@ -21,6 +21,12 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_ENV
           echo "file_url=$FILE_URL" >> $GITHUB_ENV
 
+      - name: Initialize JSON structure if necessary
+        run: |
+          jq 'if .dist-version == null then . + {"dist-version": {"latest": ""}} else . end |
+              if .versions == null then . + {"versions": {}} else . end' zix.json > zix-temp.json
+          mv zix-temp.json zix.json
+
       - name: Update zix.json file
         run: |
           VERSION=${{ env.version }}
@@ -38,3 +44,4 @@ jobs:
           git add zix.json
           git commit -m "Update zix.json for version ${{ env.version }}"
           git push
+
