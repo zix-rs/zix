@@ -1,7 +1,7 @@
 cargo build --release
 
 Write-Output "Release: "
-$time1 = Measure-Command { .\target\release\zx.exe -lha ../../ }
+$time1 = Measure-Command { .\target\release\zx.exe -lha }
 $milliseconds1 = $time1.TotalMilliseconds
 Write-Output "The command took $milliseconds1 ms"
 
