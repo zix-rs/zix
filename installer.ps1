@@ -8,13 +8,23 @@ try {
     Write-Host "Latest available version: $latestVersion"
 
     $TargetDir = "C:\Program Files\Zix"
-    New-Item -ItemType Directory -Path $TargetDir -Force
     $DownloadPath = Join-Path -Path $TargetDir -ChildPath "zx.exe"
 
-    Invoke-WebRequest -Uri $latestUrl -OutFile $DownloadPath
+    $currentPath = [Environment]::GetEnvironmentVariable("PATH", [EnvironmentVariableTarget]::Machine)
+    if ($currentPath -split ";" -contains $TargetDir) {
+        Write-Host "Zix is already in PATH. Updating executable..."
+    } else {
+        Write-Host "Zix is not in PATH. Adding it now..."
+        [Environment]::SetEnvironmentVariable("PATH", "$currentPath;$TargetDir", [EnvironmentVariableTarget]::Machine)
+        Write-Host "Zix added to PATH."
+    }
 
-    [Environment]::SetEnvironmentVariable("PATH", "$env:PATH;$TargetDir", [EnvironmentVariableTarget]::Machine)
-    Write-Output "zix successfully installed and added to PATH."
+    if (-not (Test-Path -Path $TargetDir)) {
+        New-Item -ItemType Directory -Path $TargetDir -Force
+    }
+
+    Invoke-WebRequest -Uri $latestUrl -OutFile $DownloadPath
+    Write-Output "Zix successfully installed/updated."
 
 } catch {
     Write-Host "Error fetching registry information: $_"
