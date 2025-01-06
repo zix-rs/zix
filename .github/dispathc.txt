@@ -1,16 +1,4 @@
-name: Update Installer
-
-on:
-  release:
-    types:
-      - published
-
-jobs:
-  update-installer-json:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Clone the repository
+- name: Clone the repository
         uses: actions/checkout@v3
 
       - name: Set new version
@@ -18,6 +6,8 @@ jobs:
         run: |
           VERSION=${{ github.event.release.tag_name }}
           FILE_URL="https://github.com/${{ github.repository }}/releases/download/$VERSION/zx.exe"
+          # Remove the "v" prefix from the version number
+          VERSION=${VERSION#v}
           echo "version=$VERSION" >> $GITHUB_ENV
           echo "file_url=$FILE_URL" >> $GITHUB_ENV
 
@@ -27,26 +17,21 @@ jobs:
               if .versions == null then . + {"versions": {}} else . end' zix.json > zix-temp.json
           mv zix-temp.json zix.json
 
-      - name: Check the current contents of zix.json
-        run: cat zix.json
-
       - name: Update zix.json file
         run: |
           VERSION=${{ env.version }}
           FILE_URL=${{ env.file_url }}
 
-          echo "Updating zix.json with version: $VERSION"
-          echo "File URL: $FILE_URL"
-
           jq --arg version "$VERSION" --arg url "$FILE_URL" \
-            '.dist-version.latest = $version | .versions[$version] = {url: $url}' \
-            zix.json > zix-updated.json
+          '.dist-version.latest = $version | .versions[$version] = {url: $url}' \
+          zix.json > zix-updated.json
 
           mv zix-updated.json zix.json
 
       - name: Commit and push changes
         run: |
           git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
           git add zix.json
           git commit -m "Update zix.json for version ${{ env.version }}"
           git push
