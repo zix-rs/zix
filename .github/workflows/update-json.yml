@@ -18,6 +18,8 @@ jobs:
         run: |
           VERSION=${{ github.event.release.tag_name }}
           FILE_URL="https://github.com/${{ github.repository }}/releases/download/$VERSION/zx.exe"
+          # Remove the "v" prefix from the version number
+          VERSION=${VERSION#v}
           echo "version=$VERSION" >> $GITHUB_ENV
           echo "file_url=$FILE_URL" >> $GITHUB_ENV
 
@@ -41,7 +43,7 @@ jobs:
       - name: Commit and push changes
         run: |
           git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
           git add zix.json
           git commit -m "Update zix.json for version ${{ env.version }}"
           git push
-
