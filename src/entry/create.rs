@@ -113,6 +113,10 @@ pub fn dir(dir_entry: &DirEntry, optis: &Vec<Opti>) -> Option<Entry> {
             }
         }
 
+        if filename.starts_with('.')    {
+            entry_dir.entry_kind = EntryKind::Hidden
+        }
+
         entry_dir.name = filename.to_string();
     }
 
