@@ -16,7 +16,7 @@
 The easiest way to install zix is by downloading the installer executable from the GitHub Releases page.
 1. Download the latest .exe file for your system.
 2. Run the installer; it will automatically download zix, install the command, and add it to your system's PATH for easy access.
-[Click here for install zix](https://github.com/arkeasz/zix/releases/download/v0.0.4/zix-installer.exe)
+[Click here for install zix](https://github.com/arkeasz/zix/releases/download/v0.0.5/zix-installer.exe)
 
 ### Using Cargo (Rust's package manager)
 You can easily install `zix` using Cargo by running the following command:
