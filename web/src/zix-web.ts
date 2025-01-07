@@ -1,6 +1,8 @@
 import { LitElement, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { PALETTE } from "./colors";
+import "./presentation.js";
+import "./installation.js";
 
 @customElement('zix-web')
 export class ZixWeb extends LitElement  {
@@ -8,7 +10,7 @@ export class ZixWeb extends LitElement  {
 
         :host   {
             display: grid;
-            grid-template-rows: 6rem auto 5rem;
+            grid-template-rows: 6rem auto 7rem;
             grid-template-columns: 100%;
             background-color: ${PALETTE.primary};
             min-height: 100vh;
@@ -26,7 +28,7 @@ export class ZixWeb extends LitElement  {
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 0px 8px 5px rgba(0,0,0,0.71);
             width: calc(95% - 2rem);
             margin: 1rem 0;
             color: ${PALETTE.ctext};
@@ -44,8 +46,9 @@ export class ZixWeb extends LitElement  {
             align-items: center;
             text-decoration: none;
             height: 1rem;
-            padding: .5rem 1rem;
+            padding: .5rem 1.7rem;
             gap: 0.5rem;
+            border-radius: 3px
         }
 
         .social p {
@@ -73,6 +76,7 @@ export class ZixWeb extends LitElement  {
             font-family: "Gasoek One", serif;
             font-weight: 400;
             font-style: normal;
+            color: #eee
         }
     `;
 
@@ -88,7 +92,10 @@ export class ZixWeb extends LitElement  {
                     <img src="/zix/github.svg" alt="github">
                 </a>
             </header>
-            <main>main</main>
+            <main>
+                <presentation-section></presentation-section>
+                <installation-section></presentation-section>
+            </main>
             <footer>
                 <p>ZIX</p>
             </footer>
