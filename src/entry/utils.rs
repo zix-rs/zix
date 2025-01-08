@@ -13,13 +13,15 @@ pub fn format_file_size(bytes: u64) -> String {
     const KB: u64 = 1024;
     const MB: u64 = KB * 1024;
     const GB: u64 = MB * 1024;
-
     let str_out = if bytes >= GB {
-        format!("{:.1} {}", (bytes as f64 / GB as f64).to_string().normal(), "GB".bright_yellow())
+        let b = format!("{:.1}", bytes as f64 / GB as f64);
+        format!("{} {}", b.normal(), "GB".bright_yellow())
     } else if bytes >= MB {
-        format!("{:.1} {}", (bytes as f64 / MB as f64).to_string().normal(), "MB".bright_cyan())
+        let b = format!("{:.1}", bytes as f64 / MB as f64);
+        format!("{} {}", b.normal(), "MB".bright_cyan())
     } else if bytes >= KB {
-        format!("{:.1} {}", (bytes as f64 / KB as f64).to_string().normal(), "KB".bright_magenta())
+        let b = format!("{:.1}", bytes as f64 / KB as f64);
+        format!("{} {}", b.normal(), "KB".bright_magenta())
     } else if bytes > 0 {
         format!("{} {}", bytes.to_string().normal(), "B".bright_red())
     } else  {

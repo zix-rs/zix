@@ -37,7 +37,7 @@ pub mod prgrid  {
 
         if op.contains(&Opti::Headers)  {
             println!(
-                "{:<6} {:<15} {:<7} {}",
+                "{:<6} {:<15} {:<8} {}",
                 "Mode".bold(), "Last Modified".bold(), "Size".bold(), "Name".bold())
         }
 
