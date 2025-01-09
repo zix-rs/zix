@@ -8,7 +8,7 @@ Thank you for considering contributing to Zix! Contributions, whether they're bu
 1. **Fork the Repository**
    Fork the repository to your GitHub account and clone it locally. Make sure you are working on the latest version of the main branch:
    ```bash
-   git clone https://github.com/arkeasz/zix.git
+   git clone https://github.com/zix-rs/zix.git
    cd zix
    git pull origin main
    ```
@@ -61,19 +61,6 @@ feat(installer): add workflow to update zix.json on release
 ```
 fix(cli): correct parsing of command-line arguments
 ```
-
----
-
-## Getting Started
-
-1. **Fork the Repository**
-   Fork the repository to your GitHub account and clone it locally. Make sure you are working on the latest version of the main branch:
-   ```bash
-   git clone https://github.com/your-username/zix.git
-   cd zix
-   git pull origin main
-
-
 ## Workflow
 
 1. **Create a New Branch**

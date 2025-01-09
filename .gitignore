@@ -2,3 +2,4 @@
 *.exe
 data.txt
 web
+.vscode

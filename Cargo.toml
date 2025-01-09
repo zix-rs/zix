@@ -7,7 +7,7 @@ description = "A simple and fast alternative to the traditional Unix `ls` comman
 license = "MIT"
 
 authors = ["Arki"]
-repository = "https://github.com/arkeasz/zix"
+repository = "https://github.com/zix-rs/zix"
 
 [profile.dev]
 opt-level = 0
