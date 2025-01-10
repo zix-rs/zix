@@ -2,7 +2,7 @@
 ## Overview
 `zix` is a simple and fast alternative to the traditional Unix `ls` command, designed specifically for Windows. It lists directory contents with a focus on speed and simplicity, aiming to improve the user experience in Windows environments.
 
-![zix gif](./web/public/zix.gif)
+![zix gif](./zix.gif)
 
 ## Features
 - **Fast directory listing**
