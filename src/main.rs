@@ -1,11 +1,10 @@
-pub mod grid;
 pub mod entry;
 pub mod app;
 pub mod ref_command;
 pub mod parser;
 pub mod window;
+pub mod output;
 use app::App;
-use grid::prgrid;
 use parser::Opti;
 
 fn main() {
@@ -19,9 +18,9 @@ fn main() {
         }
 
         if ops.contains(&Opti::List) {
-            prgrid::list(&items, ops);
+            output::list::base(&items, ops);
         } else {
-            prgrid::base(vect_entry_name, &items);
+            output::grid::base(vect_entry_name, &items);
         }
     }
 }
