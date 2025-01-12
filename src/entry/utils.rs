@@ -53,6 +53,61 @@ pub fn entry_mode(meta: Metadata, perm: Permissions) -> String   {
                 "rw".normal()
             }
         );
+    } else  {
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+
+            let permissions = perm.mode();
+            mode = format!(
+                "{}{}{}{}{}{}{}{}{}",
+                if meta.is_dir() {
+                    "d".bright_blue()
+                } else {
+                    "-".normal()
+                },
+                if permissions & 0o400 != 0 {
+                    "r".bright_green()
+                } else {
+                    "-".normal()
+                },
+                if permissions & 0o200 != 0 {
+                    "w".bright_yellow()
+                } else {
+                    "-".normal()
+                },
+                if permissions & 0o100 != 0 {
+                    "x".bright_red()
+                } else {
+                    "-".normal()
+                },
+                if permissions & 0o040 != 0 {
+                    "r".bright_green()
+                } else {
+                    "-".normal()
+                },
+                if permissions & 0o020 != 0 {
+                    "w".bright_yellow()
+                } else {
+                    "-".normal()
+                },
+                if permissions & 0o010 != 0 {
+                    "x".bright_red()
+                } else {
+                    "-".normal()
+                },
+                if permissions & 0o004 != 0 {
+                    "r".bright_green()
+                } else {
+                    "-".normal()
+                },
+                if permissions & 0o002 != 0 {
+                    "w".bright_yellow()
+                } else {
+                    "-".normal()
+                }
+            );
+        }
     }
     return mode
 }

@@ -72,7 +72,7 @@ pub fn dir(dir_entry: &DirEntry, optis: &Vec<Opti>) -> Option<Entry> {
             entry_dir.lenght = if metadata.is_dir() {
                 format!("{}", "-".bright_white())
             } else {
-                format_file_size(metadata.file_size())
+                format_file_size(metadata.len())
             };
             let permissions = metadata.permissions();
 

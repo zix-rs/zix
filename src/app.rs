@@ -33,7 +33,10 @@ impl App    {
                 "--all" | "-a" => app.options.push(Opti::All),
                 "--list" | "-l" => app.options.push(Opti::List),
                 _ => {
-                    println!("'{}' does not exist\n Type 'zx --help' for more information", op);
+                    println!(
+                        "'{}' is not a valid option\nType 'zx --help' for more information.",
+                        op
+                    );
                     return None
                 }
             }
@@ -41,12 +44,14 @@ impl App    {
 
         for val in values.iter()   {
             if val.contains('*')    {
-                if let Ok(paths) = glob(&val){
+                if let Ok(paths) = glob(&val) {
                     entries.extend(
                         paths
                             .filter_map(Result::ok)
                             .filter_map(|path| create::filter_dir(&path))
                     );
+                } else {
+                    println!("Error interpreting the pattern: {}", val);
                 }
 
             } else {
