@@ -43,28 +43,74 @@ impl App    {
         }
 
         for val in values.iter()   {
-            if val.contains('*')    {
-                if let Ok(paths) = glob(&val) {
-                    entries.extend(
-                        paths
-                            .filter_map(Result::ok)
-                            .filter_map(|path| create::filter_dir(&path))
-                    );
-                } else {
-                    println!("Error interpreting the pattern: {}", val);
-                }
-
-            } else {
-                if let Ok(dir) = fs::read_dir::<&String>(&val)   {
-                    entries.extend(
-                        dir
+            #[cfg(unix)]
+            {
+                if val.contains('*')    {
+                    if let Ok(paths) = glob(&val) {
+                        entries.extend(
+                            paths
                                 .filter_map(Result::ok)
-                                .filter_map(|path| create::dir(&path, &app.options))
-                    );
-               } else {
-                   continue;
-               };
+                                .filter_map(|path| create::filter_dir(&path))
+                        );
+                    } else {
+                        println!("Error interpreting the pattern: {}", val);
+                    }
+                } else {
+                    if let Ok(path) = std::path::PathBuf::from(val).canonicalize() {
+                        if let Some(entry) = create::filter_dir(&path) {
+                            entries.push(entry);
+                        }
+                    }
+                }
             }
+
+            #[cfg(windows)] {
+                if val.contains('*')    {
+                    if let Ok(paths) = glob(&val) {
+                        entries.extend(
+                            paths
+                                .filter_map(Result::ok)
+                                .filter_map(|path| create::filter_dir(&path))
+                        );
+                    } else {
+                        println!("Error interpreting the pattern: {}", val);
+                    }
+                } else {
+                    if let Ok(dir) = fs::read_dir::<&String>(&val)   {
+                        entries.extend(
+                            dir
+                                    .filter_map(Result::ok)
+                                    .filter_map(|path| create::dir(&path, &app.options))
+                        );
+                   } else {
+                       continue;
+                   };
+                }
+            }
+            // if val.contains('*')    {
+            //     #[cfg(windows)] {
+            //         if let Ok(paths) = glob(&val) {
+            //             entries.extend(
+            //                 paths
+            //                     .filter_map(Result::ok)
+            //                     .filter_map(|path| create::filter_dir(&path))
+            //             );
+            //         } else {
+            //             println!("Error interpreting the pattern: {}", val);
+            //         }
+            //     }
+
+            // } else {
+            //     if let Ok(dir) = fs::read_dir::<&String>(&val)   {
+            //         entries.extend(
+            //             dir
+            //                     .filter_map(Result::ok)
+            //                     .filter_map(|path| create::dir(&path, &app.options))
+            //         );
+            //    } else {
+            //        continue;
+            //    };
+            // }
         }
 
         app.entries = entries;
