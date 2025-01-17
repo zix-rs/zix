@@ -7,23 +7,23 @@ use crate::parser::Opti;
 
 pub fn base(items: &[Entry], op: Vec<Opti>)   {
     let max_length = items.iter().map(|s| s.lenght.len()).max().unwrap_or(1) + 5;
-
     let mut output = String::new();
-    if op.contains(&Opti::Headers)  {
-        #[cfg(windows)] {
-            println!(
-                "{:<6} {:<15} {:<8} {}",
-                "Mode".bold(), "Last Modified".bold(), "Size".bold(), "Name".bold())
-        }
 
-        #[cfg(unix)]    {
-            println!(
-                "{:<11} {:<15} {:<8} {}",
-                "Mode".bold(), "Last Modified".bold(), "Size".bold(), "Name".bold())
+    if !items.is_empty()  {
+        if op.contains(&Opti::Headers)  {
+            #[cfg(windows)] {
+                println!(
+                    "{:<6} {:<15} {:<8} {}",
+                    "Mode".bold(), "Last Modified".bold(), "Size".bold(), "Name".bold())
+            }
+
+            #[cfg(unix)]    {
+                println!(
+                    "{:<11} {:<15} {:<8} {}",
+                    "Mode".bold(), "Last Modified".bold(), "Size".bold(), "Name".bold())
+            }
         }
     }
-
-
 
     for entry in items.iter()   {
             let v: Vec<&str> = entry.last_modified.split('\t').collect();
