@@ -13,6 +13,8 @@ META OPTIONS:
 DISPLAY OPTIONS:
     [--list -l]
         detailed list format
+    [--tree, -t]
+        recurse into directories as a tree
 
 FILTERING AND SORTING OPTIONS:
     [--all, -a]
