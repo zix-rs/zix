@@ -1,0 +1,38 @@
+# Git commit message template
+#
+# Title: [type] Short description of the commit
+#
+# Type options:
+# - feat: New feature
+# - fix: Bug fix
+# - docs: Documentation changes
+# - style: Code style (formatting, missing semi-colons, etc.)
+# - refactor: Refactoring code
+# - perf: Performance improvements
+# - test: Adding or modifying tests
+# - chore: Maintenance tasks, changes that don’t affect the codebase
+#
+# Example:
+# feat: Add new API endpoint for user login
+#
+# Description: (Optional)
+# A more detailed explanation of the commit, including the reasoning behind the change,
+# any trade-offs made, and any relevant context.
+#
+# - What was changed?
+# - Why was it changed?
+# - How does this change improve the project?
+#
+# Example description:
+# Implemented a new login endpoint that accepts JWT tokens for authentication.
+# This change improves security by enabling token-based authentication.
+#
+# - Breaking changes:
+# (Optional)
+# - Any backward-breaking changes introduced in this commit.
+#
+# Example:
+# - Removed deprecated function `foo()`
+#
+# Issue: #123 (Optional)
+# Link to an issue or ticket related to this commit.
