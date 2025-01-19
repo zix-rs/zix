@@ -19,6 +19,8 @@ fn main() {
 
         if ops.contains(&Opti::List) {
             output::list::base(&items, ops);
+        } else if ops.contains(&Opti::Tree)  {
+            output::tree::base(&items, ops);
         } else {
             output::grid::base(vect_entry_name, &items);
         }

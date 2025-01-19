@@ -1,6 +1,6 @@
 use std::fs;
 
-use crate::entry::create::{Entry, self};
+use crate::entry::{Entry, create};
 use crate::parser::{parse, Opti};
 use crate::ref_command::*;
 use glob::glob;

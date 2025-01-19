@@ -14,33 +14,7 @@ use colored::*;
 
 use crate::parser::Opti;
 
-use super::{kind::EntryKind, utils::{entry_mode, format_file_size, is_executable}};
-
-#[derive(Clone, Debug)]
-pub struct Entry    {
-    pub mode: String,
-    pub last_modified: String,
-    pub name: String,
-    pub lenght: String,
-    pub father: String,
-    pub entry_kind: EntryKind,
-    pub symlink: PathBuf
-}
-
-impl Entry  {
-    pub fn new() -> Entry {
-        Entry {
-            mode: String::new(),
-            last_modified: String::new(),
-            name: String::new(),
-            lenght: String::new(),
-            father: String::new(),
-            entry_kind: EntryKind::Other,
-            symlink: PathBuf::new()
-        }
-    }
-}
-
+use super::{Entry, kind::EntryKind, utils::{entry_mode, format_file_size, is_executable}};
 
 
 pub fn filter_dir(path: &PathBuf) -> Option<Entry> {

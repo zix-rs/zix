@@ -1,10 +1,10 @@
 use crate::entry::{
-    create::Entry,
+    Entry,
     kind::EntryKind
 };
+use colored::Colorize;
 use unicode_width::UnicodeWidthStr;
 use super::utils::*;
-use colored::Colorize;
 use crate::window::get_terminal_size;
 
 

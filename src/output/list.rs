@@ -1,5 +1,5 @@
 use crate::entry::{
-    create::Entry,
+    Entry,
     kind::EntryKind
 };
 use colored::Colorize;
