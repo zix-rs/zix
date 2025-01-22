@@ -5,10 +5,8 @@
 ![zix gif](./assets/zix.gif)
 
 ## Features
-- **Fast directory listing**
 - **Customizable output formats**
 - **Cross-platform**: Primarily for Windows, but adaptable for others
-- **Lightweight and efficient**
 
 ## Installation
 
@@ -24,8 +22,13 @@ You can easily install `zix` using Cargo by running the following command:
 ```bash
 cargo install zix
 ```
+### Linux (using curl)
+You can quickly install zix using curl with our automated installation script:
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/zix-rs/zix/refs/heads/main/install.sh | sh
+```
 
-### Using PowerShell
+### Windows (using powershell)
 If you prefer using PowerShell, you can clone the repository and run an installation script to install zix:
 
 Open PowerShell and run the following command to clone the repository and install zix:
