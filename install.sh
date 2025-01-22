@@ -40,7 +40,7 @@ download_and_parse() {
     fi
 
     read -r LTS_VERSION INSTALLER_URL INSTALLER_NAME << EOF
-    $(echo "$ZIX_JSON" | jq -r '[.dist.latest, .versions[.dist.latest].url, .bin] | @tsv')
+    $(echo "$ZIX_JSON" | jq -r '[.dist.latest, .versions[.dist.latest].lin, .bin] | @tsv')
 EOF
 
     if [ -z "$LTS_VERSION" ] || [ -z "$INSTALLER_URL" ] || [ -z "$INSTALLER_NAME" ]; then
