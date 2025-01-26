@@ -2,8 +2,8 @@ $jsonUrl = "https://raw.githubusercontent.com/zix-rs/zix/refs/heads/main/zix.jso
 
 try {
     $json = Invoke-RestMethod -Uri $jsonUrl -Method GET
-    $latestVersion = $json."dist-version".latest
-    $latestUrl = $json.versions.$latestVersion.url
+    $latestVersion = $json.dist.latest
+    $latestUrl = $json.versions.$latestVersion.win
     Write-Output $json
     Write-Host "Latest available version: $latestVersion"
 

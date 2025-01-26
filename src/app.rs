@@ -3,7 +3,10 @@ use std::fs;
 use crate::entry::{Entry, create};
 use crate::parser::{parse, Opti};
 use crate::ref_command::*;
+
+#[cfg(windows)]
 use glob::glob;
+
 
 #[derive(Clone, Debug)]
 pub struct App {
