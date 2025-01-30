@@ -1,6 +1,6 @@
 
 pub const NAME: &str = "zix";
-pub const VERSION: &str = "v0.0.4";
+pub const VERSION: &str = "v0.0.6";
 pub const HELP: &str = r#"USAGE:
     fac <option> <files...>
 

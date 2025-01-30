@@ -10,7 +10,7 @@ use glob::glob;
 
 #[derive(Clone, Debug)]
 pub struct App {
-    pub entries: Vec<Entry>,
+    pub entries: Vec<Vec<Entry>>,
     pub name: &'static str,
     pub version: &'static str,
     pub options: Vec<Opti>
@@ -27,7 +27,6 @@ impl App    {
         };
 
         let (options, values) = parse();
-        let mut entries: Vec<Entry> = Vec::new();
         for op in options   {
             match op.as_str()    {
                 "--help" | "-?" => { help(); return None},
@@ -49,6 +48,8 @@ impl App    {
 
         #[cfg(unix)] {
             for val in values.iter() {
+                let mut entries: Vec<Entry> = Vec::new();
+
                 match fs::metadata(val) {
                     Ok(metadata) => {
                         if metadata.is_file() {
@@ -57,7 +58,7 @@ impl App    {
                                 entries.push(entry);
                             }
                         } else if metadata.is_dir() {
-                            if let Ok(dir) = fs::read_dir(val) {  // Removido el type hint `:&String`
+                            if let Ok(dir) = fs::read_dir(val) {
                                 entries.extend(
                                     dir
                                         .filter_map(Result::ok)
@@ -70,11 +71,15 @@ impl App    {
                     },
                     Err(_) => println!("Cannot access path: {}", val)
                 }
+
+                app.entries.push(entries)
             }
         }
 
         #[cfg(windows)] {
         for val in values.iter()   {
+            let mut entries: Vec<Entry> = Vec::new();
+
                 if val.contains('*')    {
                     if let Ok(paths) = glob(&val) {
                         entries.extend(
@@ -90,16 +95,19 @@ impl App    {
                         entries.extend(
                             dir
                                     .filter_map(Result::ok)
-                                    .filter_map(|path| create::dir(&path, &app.options))
+                                    .filter_map(
+                                        |path|
+                                        create::dir(&path, &app.options)
+                                    )
                         );
                    } else {
                        continue;
                    };
                 }
+                app.entries.push(entries);
             }
         }
 
-        app.entries = entries;
         Some(app)
     }
 }

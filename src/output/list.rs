@@ -52,9 +52,11 @@ pub fn base(items: &[Entry], op: Vec<Opti>)   {
                         )
                     },
                 _ => {
-                    output.push_str(&format!(
+                    output.push_str(
+                        &format!(
                         "{:<6} {:<19} {:>width$} {}\n",
-                        entry.mode, format!("{} {}", v[0].yellow(), v[1].green()), entry.lenght.bold(), entry.name, width = max_length)
+                        entry.mode, format!("{} {}", v[0].yellow(), v[1].green()), entry.lenght.bold(), entry.name, width = max_length
+                        )
                     )
                 }
             };
