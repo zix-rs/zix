@@ -25,7 +25,7 @@ pub fn format_file_size(bytes: u64) -> String {
     } else if bytes > 0 {
         format!("{} {}", bytes.to_string().normal(), "B".bright_red())
     } else  {
-        format!("{}", "-".bright_white())
+        format!("{}", " -".bright_white())
     };
 
     str_out

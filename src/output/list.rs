@@ -1,26 +1,28 @@
-use crate::entry::{
-    Entry,
-    kind::EntryKind
-};
+use crate::{entry::{
+    kind::EntryKind, Entry
+}, output::utils::strip_ansi_codes};
 use colored::Colorize;
 use crate::parser::Opti;
 
 pub fn base(items: &[Entry], op: Vec<Opti>)   {
     let max_length = items.iter().map(|s| s.lenght.len()).max().unwrap_or(1) + 5;
+
+    let ml = items.iter().map(|s| strip_ansi_codes(&s.lenght).len()).max().unwrap_or(1)+1;
+
     let mut output = String::new();
 
     if !items.is_empty()  {
         if op.contains(&Opti::Headers)  {
             #[cfg(windows)] {
                 println!(
-                    "{:<6} {:<15} {:<8} {}",
-                    "Mode".bold(), "Last Modified".bold(), "Size".bold(), "Name".bold())
+                    "{} {:<16} {:<w$} {}",
+                    "Mode".bold().underline(), "Last Modified".bold().underline(), "Size".bold().underline(), "Name".bold().underline(), w = ml)
             }
 
             #[cfg(unix)]    {
                 println!(
-                    "{:<11} {:<15} {:<8} {}",
-                    "Mode".bold(), "Last Modified".bold(), "Size".bold(), "Name".bold())
+                    "{} {:<16} {:<w$} {}",
+                    "Mode".bold().underline(), "Last Modified".bold().underline(), "Size".bold().underline(), "Name".bold().underline(), w = ml)
             }
         }
     }
