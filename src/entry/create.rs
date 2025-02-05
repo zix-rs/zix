@@ -41,7 +41,7 @@ pub fn dir(dir_entry: &DirEntry, optis: &Vec<Opti>) -> Option<Entry> {
         if filename.starts_with('.') && !optis.contains(&Opti::All) {
             return None;
         }
-
+        entry_dir.path.push(dir_entry.path());
         if let Ok(metadata) = fs::metadata(dir_entry.path())    {
             entry_dir.lenght = if metadata.is_dir() {
                 format!("{}", "-".bright_white())

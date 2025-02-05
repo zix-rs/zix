@@ -13,7 +13,8 @@ pub struct Entry    {
     pub name: String,
     pub lenght: String,
     pub entry_kind: EntryKind,
-    pub symlink: PathBuf
+    pub symlink: PathBuf,
+    pub path: PathBuf
 }
 
 impl Entry  {
@@ -24,7 +25,8 @@ impl Entry  {
             name: String::new(),
             lenght: String::new(),
             entry_kind: EntryKind::Other,
-            symlink: PathBuf::new()
+            symlink: PathBuf::new(),
+            path: PathBuf::new()
         }
     }
 }
