@@ -1,13 +1,17 @@
-use crate::{entry::{
-    kind::EntryKind, Entry
-}, output::utils::strip_ansi_codes};
+use crate::{
+    entry::{
+        kind::EntryKind,
+        Entry
+    },
+    output::utils::strip_ansi_codes
+};
 use colored::Colorize;
 use crate::parser::Opti;
 
-pub fn base(items: &[Entry], op: Vec<Opti>)   {
+pub fn base(items: &mut [Entry], op: Vec<Opti>)   {
     let max_length = items.iter().map(|s| s.lenght.len()).max().unwrap_or(1) + 5;
-
     let ml = items.iter().map(|s| strip_ansi_codes(&s.lenght).len()).max().unwrap_or(1)+1;
+    let empt = items.iter().all(|f| f.lenght == "-".bright_white().to_string());
 
     let mut output = String::new();
 
@@ -27,8 +31,11 @@ pub fn base(items: &[Entry], op: Vec<Opti>)   {
         }
     }
 
-    for entry in items.iter()   {
+    for entry in items.iter_mut()   {
             let v: Vec<&str> = entry.last_modified.split('\t').collect();
+            if empt && entry.lenght == "-".bright_white().to_string() {
+                entry.lenght = "   -".bright_white().to_string();
+            }
             match entry.entry_kind  {
                 EntryKind::Hidden => {
                     output.push_str(
