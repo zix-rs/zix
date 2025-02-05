@@ -17,17 +17,15 @@ pub fn base(items: &mut [Entry], op: Vec<Opti>)   {
 
     if !items.is_empty()  {
         if op.contains(&Opti::Headers)  {
-            #[cfg(windows)] {
-                println!(
-                    "{} {:<16} {:<w$} {}",
-                    "Mode".bold().underline(), "Last Modified".bold().underline(), "Size".bold().underline(), "Name".bold().underline(), w = ml)
-            }
-
-            #[cfg(unix)]    {
-                println!(
-                    "{} {:<16} {:<w$} {}",
-                    "Mode".bold().underline(), "Last Modified".bold().underline(), "Size".bold().underline(), "Name".bold().underline(), w = ml)
-            }
+            #[cfg(windows)]
+            println!(
+                "{} {:<16} {:<w$} {}",
+                "Mode".bold().underline(),
+                "Last Modified".bold().underline(),
+                "Size".bold().underline(),
+                "Name".bold().underline(),
+                w = ml
+            )
         }
     }
 

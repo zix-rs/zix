@@ -2,8 +2,16 @@ use std::fs::{self, Metadata, Permissions};
 use colored::Colorize;
 
 pub fn is_executable(filename: &str, _metadata: &fs::Metadata) -> bool {
-    if filename.ends_with(".exe") || filename.ends_with(".bat") || filename.ends_with(".cmd") {
-        return true;
+    #[cfg(windows)] {
+        if filename.ends_with(".exe") || filename.ends_with(".bat") || filename.ends_with(".cmd") {
+            return true;
+        }
+    }
+    #[cfg(unix)] {
+        use std::os::unix::fs::PermissionsExt;
+        if _metadata.permissions().mode() & 0o111 != 0 {
+            return true;
+        }
     }
     false
 }
@@ -33,7 +41,7 @@ pub fn format_file_size(bytes: u64) -> String {
 
 pub fn entry_mode(meta: Metadata, perm: Permissions) -> String   {
     let mut mode = String::new();
-    if cfg!(target_os = "windows")  {
+    #[cfg(windows)] {
         mode = format!(
             "{}{}{}",
             if meta.is_dir() {
@@ -52,61 +60,60 @@ pub fn entry_mode(meta: Metadata, perm: Permissions) -> String   {
                 "rw".normal()
             }
         );
-    } else  {
-        #[cfg(unix)]
-        {
-            use std::os::unix::fs::PermissionsExt;
+    }
 
-            let permissions = perm.mode();
-            mode = format!(
-                "{}{}{}{}{}{}{}{}{}",
-                if meta.is_dir() {
-                    "d".bright_blue()
-                } else {
-                    "-".normal()
-                },
-                if permissions & 0o400 != 0 {
-                    "r".bright_green()
-                } else {
-                    "-".normal()
-                },
-                if permissions & 0o200 != 0 {
-                    "w".bright_yellow()
-                } else {
-                    "-".normal()
-                },
-                if permissions & 0o100 != 0 {
-                    "x".bright_red()
-                } else {
-                    "-".normal()
-                },
-                if permissions & 0o040 != 0 {
-                    "r".bright_green()
-                } else {
-                    "-".normal()
-                },
-                if permissions & 0o020 != 0 {
-                    "w".bright_yellow()
-                } else {
-                    "-".normal()
-                },
-                if permissions & 0o010 != 0 {
-                    "x".bright_red()
-                } else {
-                    "-".normal()
-                },
-                if permissions & 0o004 != 0 {
-                    "r".bright_green()
-                } else {
-                    "-".normal()
-                },
-                if permissions & 0o002 != 0 {
-                    "w".bright_yellow()
-                } else {
-                    "-".normal()
-                }
-            );
-        }
+    #[cfg(unix)]    {
+        use std::os::unix::fs::PermissionsExt;
+
+        let permissions = perm.mode();
+        mode = format!(
+            "{}{}{}{}{}{}{}{}{}",
+            if meta.is_dir() {
+                "d".bright_blue()
+            } else {
+                "-".normal()
+            },
+            if permissions & 0o400 != 0 {
+                "r".bright_green()
+            } else {
+                "-".normal()
+            },
+            if permissions & 0o200 != 0 {
+                "w".bright_yellow()
+            } else {
+                "-".normal()
+            },
+            if permissions & 0o100 != 0 {
+                "x".bright_red()
+            } else {
+                "-".normal()
+            },
+            if permissions & 0o040 != 0 {
+                "r".bright_green()
+            } else {
+                "-".normal()
+            },
+            if permissions & 0o020 != 0 {
+                "w".bright_yellow()
+            } else {
+                "-".normal()
+            },
+            if permissions & 0o010 != 0 {
+                "x".bright_red()
+            } else {
+                "-".normal()
+            },
+            if permissions & 0o004 != 0 {
+                "r".bright_green()
+            } else {
+                "-".normal()
+            },
+            if permissions & 0o002 != 0 {
+                "w".bright_yellow()
+            } else {
+                "-".normal()
+            }
+        );
     }
     return mode
 }
