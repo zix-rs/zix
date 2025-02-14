@@ -5,38 +5,3 @@ members = [
     "zix-manager",
     "zix-cli"
 ]
-# [package]
-# name = "zix"
-# version = "0.0.6"
-# edition = "2021"
-
-# description = "A simple and fast alternative to the traditional Unix `ls` command, designed specifically for Windows."
-# license = "MIT"
-
-# authors = ["Arki"]
-# repository = "https://github.com/zix-rs/zix"
-
-# [profile.dev]
-# opt-level = 0
-
-# [profile.release]
-# opt-level = 3
-
-# [[bin]]
-# name = "zx"
-# path = "src/main.rs"
-
-# [dependencies]
-# chrono = "0.4.39"
-# colored = "3"
-# glob = "0.3.2"
-# regex = "1.11.1"
-# terminal_size = "0.4.1"
-# unicode-width = "0.2"
-
-# [dev-dependencies]
-# criterion = "0.5.1"
-
-# [[bench]]
-# name = "bench"
-# harness = false
