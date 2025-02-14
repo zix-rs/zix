@@ -1,0 +1,16 @@
+[package]
+name = "zix-cli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+colored = "3.0.0"
+glob = "0.3.2"
+regex = "1.11.1"
+terminal_size = "0.4.1"
+unicode-width = "0.2.0"
+zix-core = { path = "../zix-core" }
+
+[[bin]]
+name = "zx"
+path = "src/main.rs"

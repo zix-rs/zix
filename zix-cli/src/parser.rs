@@ -1,6 +1,7 @@
 use std::env;
-#[derive(Clone, Copy, PartialEq, Debug)]
+use zix_core::entry::create::FilterOptions;
 
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Opti   {
     All,
     List,
@@ -8,7 +9,31 @@ pub enum Opti   {
     Version,
     Headers,
     Icons,
-    Tree
+    Tree,
+    Grid
+}
+
+
+impl FilterOptions for Opti {
+    fn should_include_hidden(&self) -> bool {
+        matches!(self, Opti::All)
+    }
+
+    fn should_show_icons(&self) -> bool {
+        matches!(self, Opti::Icons)
+    }
+
+    fn should_use_tree_view(&self) -> bool {
+        matches!(self, Opti::Tree)
+    }
+
+    fn should_use_list_view(&self) -> bool {
+        matches!(self, Opti::List)
+    }
+
+    fn should_use_grid_view(&self) -> bool {
+        matches!(self, Opti::Grid)
+    }
 }
 
 pub fn parse() -> (Vec<String>, Vec<String>)  {

@@ -40,9 +40,8 @@ pub fn format_file_size(bytes: u64) -> String {
 
 
 pub fn entry_mode(meta: Metadata, perm: Permissions) -> String   {
-    let mut mode = String::new();
     #[cfg(windows)] {
-        mode = format!(
+        let mode = format!(
             "{}{}{}",
             if meta.is_dir() {
                 "d".bright_blue()
@@ -60,13 +59,14 @@ pub fn entry_mode(meta: Metadata, perm: Permissions) -> String   {
                 "rw".normal()
             }
         );
+        return mode;
     }
 
     #[cfg(unix)]    {
         use std::os::unix::fs::PermissionsExt;
 
         let permissions = perm.mode();
-        mode = format!(
+        let mode = format!(
             "{}{}{}{}{}{}{}{}{}",
             if meta.is_dir() {
                 "d".bright_blue()
@@ -114,6 +114,6 @@ pub fn entry_mode(meta: Metadata, perm: Permissions) -> String   {
                 "-".normal()
             }
         );
+        return mode;
     }
-    return mode
 }

@@ -1,10 +1,8 @@
-use crate::{
-    entry::{
-        kind::EntryKind,
-        Entry
-    },
-    output::utils::strip_ansi_codes
+use zix_core::entry::{
+    Entry,
+    kind::EntryKind
 };
+use crate::output::utils::strip_ansi_codes;
 use colored::Colorize;
 use crate::parser::Opti;
 

@@ -1,7 +1,11 @@
 use std::{fs, path::PathBuf};
 use colored::{ColoredString, Colorize};
-use crate::{entry::{kind::EntryKind, Entry, create}, parser::Opti};
-
+use zix_core::entry::{
+    kind::EntryKind,
+    Entry,
+    create
+};
+use crate::parser::Opti;
 enum TreeConnector {
     Branch, // ├─
     LastBranch, // └──
@@ -55,7 +59,7 @@ fn recursive(pa: &PathBuf, ki: EntryKind, optis: Vec<Opti>, indent: &String) {
                                 }
                             );
 
-                            if let Some(dir_entry) = create::dir(&entry, &optis) {
+                            if let Some(dir_entry) = create::dir(&entry, &optis[0]) {
                                 recursive(&dir_entry.path, dir_entry.entry_kind, optis.clone(), &new_indent);
                             }
                         }

@@ -1,4 +1,4 @@
-use crate::entry::{
+use zix_core::entry::{
     Entry,
     kind::EntryKind
 };
