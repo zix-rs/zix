@@ -9,6 +9,15 @@ use chrono::{DateTime, Local};
 use colored::Colorize;
 use super::{kind::EntryKind, utils::{entry_mode, format_file_size, is_executable}, Entry};
 
+
+pub trait FilterOptions {
+    fn should_include_hidden(&self) -> bool;
+    fn should_show_icons(&self) -> bool;
+    fn should_use_tree_view(&self) -> bool;
+    fn should_use_list_view(&self) -> bool;
+    fn should_use_grid_view(&self) -> bool;
+}
+
 pub fn filter_entries<O: FilterOptions>(
     entries: &[Entry],
     options: &O,
@@ -16,7 +25,6 @@ pub fn filter_entries<O: FilterOptions>(
     entries
         .iter()
         .filter(|entry| {
-            // Incluir archivos ocultos solo si la opción `All` está activa
             !entry.name.starts_with('.') || options.should_include_hidden()
         })
         .cloned()
@@ -40,22 +48,12 @@ pub fn filter_dir(path: &PathBuf) -> Option<Entry> {
     Some(entry_dir)
 }
 
-pub trait FilterOptions {
-    fn should_include_hidden(&self) -> bool;
-    fn should_show_icons(&self) -> bool;
-    fn should_use_tree_view(&self) -> bool;
-    fn should_use_list_view(&self) -> bool;
-    fn should_use_grid_view(&self) -> bool;
-}
-
-
 pub fn dir<O: FilterOptions>(
     dir_entry: &DirEntry,
     options: &O,
 ) -> Option<Entry> {
     let mut entry_dir = Entry::new();
     if let Some(filename) = dir_entry.file_name().to_str() {
-        // Usar el trait para decidir si incluir archivos ocultos
         if filename.starts_with('.') && !options.should_include_hidden() {
             return None;
         }
