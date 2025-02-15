@@ -5,7 +5,8 @@ use zix_core::entry::{
     Entry,
     create
 };
-use crate::parser::Opti;
+use crate::app::Opti;
+
 enum TreeConnector {
     Branch, // ├─
     LastBranch, // └──

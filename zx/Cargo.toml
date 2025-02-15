@@ -1,5 +1,5 @@
 [package]
-name = "zix-cli"
+name = "zx"
 version = "0.1.0"
 edition = "2021"
 
@@ -10,6 +10,7 @@ regex = "1.11.1"
 terminal_size = "0.4.1"
 unicode-width = "0.2.0"
 zix-core = { path = "../zix-core" }
+zix-utils = { path = "../zix-utils"}
 
 [[bin]]
 name = "zx"

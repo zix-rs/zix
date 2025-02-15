@@ -1,20 +1,22 @@
 
-pub const NAME: &str = "zix";
+pub const NAME: &str = "zx";
 pub const VERSION: &str = "v0.0.6";
 pub const HELP: &str = r#"USAGE:
-    fac <option> <files...>
+    zx <option> <files...>
 
 META OPTIONS:
     [--help, -?]
         print help
     [--version, -v]
-        show version of six
+        show version of zx
 
 DISPLAY OPTIONS:
     [--list -l]
         detailed list format
     [--tree, -t]
         recurse into directories as a tree
+    [--grid, -g]
+        show grid format
 
 FILTERING AND SORTING OPTIONS:
     [--all, -a]

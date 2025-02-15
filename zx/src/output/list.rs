@@ -4,7 +4,7 @@ use zix_core::entry::{
 };
 use crate::output::utils::strip_ansi_codes;
 use colored::Colorize;
-use crate::parser::Opti;
+use crate::app::Opti;
 
 pub fn base(items: &mut [Entry], op: Vec<Opti>)   {
     let max_length = items.iter().map(|s| s.lenght.len()).max().unwrap_or(1) + 5;
