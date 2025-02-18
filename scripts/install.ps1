@@ -1,4 +1,4 @@
-$jsonUrl = "https://raw.githubusercontent.com/zix-rs/zix/refs/heads/main/zix.json"
+$jsonUrl = "https://raw.githubusercontent.com/zix-rs/zix/main/zix.json"
 
 try {
     $json = Invoke-RestMethod -Uri $jsonUrl -Method GET
