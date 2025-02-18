@@ -1,6 +1,6 @@
 
 pub const NAME: &str = "zx";
-pub const VERSION: &str = "v0.0.6";
+pub const VERSION: &str = "v0.0.7";
 pub const HELP: &str = r#"USAGE:
     zx <option> <files...>
 
