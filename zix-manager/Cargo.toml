@@ -1,10 +1,10 @@
 [package]
 name = "zix-manager"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
 
 [dependencies]
-zix-utils = { path = "../zix-utils"}
+zix-utils = { path = "../zix-utils", version = "*"}
 
 [[bin]]
 name = "zix"

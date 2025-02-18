@@ -1,6 +1,6 @@
 [package]
 name = "zix"
-version = "0.0.6"
+version = "0.0.7"
 edition = "2021"
 
 [dependencies]
@@ -9,8 +9,8 @@ glob = "0.3.2"
 regex = "1.11.1"
 terminal_size = "0.4.1"
 unicode-width = "0.2.0"
-zix-core = { path = "../zix-core" }
-zix-utils = { path = "../zix-utils"}
+zix-core = { path = "../zix-core", version = "*"}
+zix-utils = { path = "../zix-utils", version = "*"}
 
 [[bin]]
 name = "zx"
