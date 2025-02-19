@@ -16,7 +16,7 @@ success() {
 
 # 1. Verify requirements more efficiently
 check_requirements() {
-    local missing=()
+    missing=()
     for cmd in jq curl; do
         if ! command -v "$cmd" >/dev/null; then
             missing+=("$cmd")
