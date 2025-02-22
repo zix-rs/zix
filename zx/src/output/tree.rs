@@ -37,7 +37,7 @@ fn recursive(pa: &PathBuf, ki: EntryKind, optis: Vec<Opti>, indent: &String) {
                     if let Ok(ft) = entry.file_type() {
                         let is_last = i == total - 1;
                         let name = entry.file_name().to_string_lossy().to_string();
-
+                        
                         println!(
                             "{}{} {}",
                             indent,

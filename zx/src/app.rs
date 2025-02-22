@@ -3,7 +3,7 @@ use std::fs;
 use zix_core::entry::create;
 use zix_core::entry::{Entry, create::filter_entries};
 
-use zix_utils::parser::{self, parser};
+use zix_utils::parser::parser;
 use crate::ref_command::{help, version, NAME, VERSION};
 
 #[cfg(windows)]
