@@ -9,32 +9,22 @@ use chrono::{DateTime, Local};
 use colored::Colorize;
 use super::{kind::EntryKind, utils::{entry_mode, format_file_size, is_executable}, Entry};
 
-
-pub trait FilterOptions {
-    fn should_include_hidden(&self) -> bool;
-    fn should_show_icons(&self) -> bool;
-    fn should_use_tree_view(&self) -> bool;
-    fn should_use_list_view(&self) -> bool;
-    fn should_use_grid_view(&self) -> bool;
-}
-
-pub fn filter_entries<O: FilterOptions>(
-    entries: &[Entry],
-    options: &O,
-) -> Vec<Entry> {
-    entries
-        .iter()
-        .filter(|entry| {
-            !entry.name.starts_with('.') || options.should_include_hidden()
-        })
-        .cloned()
-        .collect()
+#[derive(Clone, Copy, PartialEq, Debug)]
+pub enum Opti   {
+    All,
+    List,
+    Help,
+    Version,
+    Headers,
+    Icons,
+    Tree,
+    Grid
 }
 
 pub fn filter_dir(path: &PathBuf) -> Option<Entry> {
     let meta = fs::metadata(path).ok()?;
-    let mut entry_dir = Entry::new();
 
+    let mut entry_dir = Entry::new();
     entry_dir.name = path.to_string_lossy().to_string();
     entry_dir.lenght = format_file_size(meta.len());
 
@@ -48,18 +38,15 @@ pub fn filter_dir(path: &PathBuf) -> Option<Entry> {
     Some(entry_dir)
 }
 
-pub fn dir<O: FilterOptions>(
-    dir_entry: &DirEntry,
-    options: &O,
-) -> Option<Entry> {
+
+pub fn dir(dir_entry: &DirEntry, optis: &Vec<Opti>) -> Option<Entry> {
     let mut entry_dir = Entry::new();
-    if let Some(filename) = dir_entry.file_name().to_str() {
-        if filename.starts_with('.') && !options.should_include_hidden() {
+    if let Some(filename) = dir_entry.file_name().to_str()    {
+        if filename.starts_with('.') && !optis.contains(&Opti::All) {
             return None;
         }
 
-        entry_dir.path.push(dir_entry.path());
-        if let Ok(metadata) = fs::metadata(dir_entry.path()) {
+        if let Ok(metadata) = fs::metadata(dir_entry.path())    {
             entry_dir.lenght = if metadata.is_dir() {
                 format!("{}", "-".bright_white())
             } else {
@@ -68,7 +55,7 @@ pub fn dir<O: FilterOptions>(
             let permissions = metadata.permissions();
 
             entry_dir.mode = entry_mode(metadata.clone(), permissions);
-            if let Ok(modified_time) = metadata.modified() {
+            if let Ok(modified_time) = metadata.modified()  {
                 let datetime: DateTime<Local> = modified_time.into();
                 entry_dir.last_modified = datetime.format("%d/%m/%Y\t%H:%M").to_string()
             } else {
@@ -78,11 +65,11 @@ pub fn dir<O: FilterOptions>(
             let ft = metadata.file_type();
             let pat = filename.to_string();
             if ft.is_file() {
-                if pat.ends_with(".zip") || pat.ends_with(".tar") {
+                if pat.ends_with(".zip") || pat.ends_with(".tar")   {
                     entry_dir.entry_kind = EntryKind::Archive
-                } else if pat.ends_with(".conf") || pat.ends_with(".config") {
+                } else if pat.ends_with(".conf") || pat.ends_with(".config")    {
                     entry_dir.entry_kind = EntryKind::Config
-                } else if is_executable(filename, &metadata) {
+                } else if is_executable(filename, &metadata)    {
                     entry_dir.entry_kind = EntryKind::Executable
                 } else {
                     entry_dir.entry_kind = EntryKind::File
@@ -95,14 +82,16 @@ pub fn dir<O: FilterOptions>(
                     },
                     Err(_) => {},
                 }
-            } else if ft.is_dir() {
+
+
+            } else if ft.is_dir()   {
                 entry_dir.entry_kind = EntryKind::Directory
-            } else {
+            } else  {
                 entry_dir.entry_kind = EntryKind::Other
             }
         }
 
-        if filename.starts_with('.') {
+        if filename.starts_with('.')    {
             entry_dir.entry_kind = EntryKind::Hidden
         }
 

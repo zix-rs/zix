@@ -3,33 +3,25 @@ pub mod output;
 pub mod ref_command;
 pub mod window;
 
-use app::{App, Opti};
-use zix_core::entry::create::filter_entries;
+use app::App;
+use zix_core::entry::create::Opti;
 
 fn main() {
     if let Some(app) = App::init() {
-        let mut items = app.entries;
+        let items = app.entries;
         let ops = app.options;
+        let mut vect_entry_name: Vec<String> = Vec::new();
 
-        for dir_entries in items.iter_mut() {
-            let mut filtered_entries = if ops.is_empty() {
-                dir_entries.clone()
-            } else {
-                filter_entries(dir_entries, &ops[0])
-            };
+        for na in &items   {
+            vect_entry_name.push(na.name.clone());
+        }
 
-            let entry_names: Vec<String> = filtered_entries
-                .iter()
-                .map(|entry| entry.name.clone())
-                .collect();
-
-            if ops.contains(&Opti::Tree) {
-                output::tree::base(&mut filtered_entries, ops.clone());
-            } else if ops.contains(&Opti::List) {
-                output::list::base(&mut filtered_entries, ops.clone());
-            } else if ops.contains(&Opti::Grid) || ops.is_empty() {
-                output::grid::base(entry_names, &filtered_entries);
-            }
+        if ops.contains(&Opti::Tree)  {
+            output::tree::base(&items, ops);
+        } else if ops.contains(&Opti::List) {
+            output::list::base(&items, ops);
+        } else {
+            output::grid::base(vect_entry_name, &items);
         }
     }
 }
