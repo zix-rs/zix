@@ -41,7 +41,7 @@ pub fn parse() -> (Vec<String>, Vec<String>)  {
 
 #[derive(Clone, Debug)]
 pub struct App {
-    pub entries: Vec<Entry>,
+    pub entries: Vec<Vec<Entry>>,
     pub name: &'static str,
     pub version: &'static str,
     pub options: Vec<Opti>
@@ -57,80 +57,98 @@ impl App    {
             options: Vec::new()
         };
 
-        let (options, values) = parse();
-        let mut entries: Vec<Entry> = Vec::new();
-        for op in options   {
-            match op.as_str()    {
-                "--help" | "-?" => { help(); return None},
-                "--headers" | "-h" => app.options.push(Opti::Headers),
-                "--version" | "-v" => { version(); return None},
-                "--all" | "-a" => app.options.push(Opti::All),
-                "--list" | "-l" => app.options.push(Opti::List),
-                "--tree" | "-t" => app.options.push(Opti::Tree),
-                _ => {
-                    println!(
-                        "'{}' is not a valid option\nType 'zx --help' for more information.",
-                        op
-                    );
-                    return None
-                }
-            }
-        }
+        if let Some((_c, options, values)) = parser(
+            false,
+            ".",
+            "-g",
+            ""
+        ) {
 
-
-        #[cfg(unix)] {
-            for val in values.iter() {
-                match fs::metadata(val) {
-                    Ok(metadata) => {
-                        if metadata.is_file() {
-                            let path = std::path::PathBuf::from(val);
-                            if let Some(entry) = create::filter_dir(&path) {
-                                entries.push(entry);
-                            }
-                        } else if metadata.is_dir() {
-                            if let Ok(dir) = fs::read_dir(val) {  // Removido el type hint `:&String`
-                                entries.extend(
-                                    dir
-                                        .filter_map(Result::ok)
-                                        .filter_map(|path| create::dir(&path, &app.options))
-                                );
-                            } else {
-                                println!("Cannot read directory: {}", val);
-                            }
-                        }
-                    },
-                    Err(_) => println!("Cannot access path: {}", val)
-                }
-            }
-        }
-
-        #[cfg(windows)] {
-        for val in values.iter()   {
-                if val.contains('*')    {
-                    if let Ok(paths) = glob(&val) {
-                        entries.extend(
-                            paths
-                                .filter_map(Result::ok)
-                                .filter_map(|path| create::filter_dir(&path))
+            for op in options   {
+                match op.as_str()    {
+                    "--help" | "-?" => { help(); return None},
+                    "--headers" | "-h" => app.options.push(Opti::Headers),
+                    "--version" | "-v" => { version(); return None},
+                    "--all" | "-a" => app.options.push(Opti::All),
+                    "--list" | "-l" => app.options.push(Opti::List),
+                    "--tree" | "-t" => app.options.push(Opti::Tree),
+                    "--grid" | "-g" => app.options.push(Opti::Grid),
+                    _ => {
+                        println!(
+                            "'{}' is not a valid option\nType 'zx --help' for more information.",
+                            op
                         );
-                    } else {
-                        println!("Error interpreting the pattern: {}", val);
+                        return None
                     }
-                } else {
-                    if let Ok(dir) = fs::read_dir::<&String>(&val)   {
-                        entries.extend(
-                            dir
-                                    .filter_map(Result::ok)
-                                    .filter_map(|path| create::dir(&path, &app.options))
-                        );
-                   } else {
-                       continue;
-                   };
                 }
             }
+
+
+            #[cfg(unix)] {
+                for val in values.iter() {
+                    let mut entries: Vec<Entry> = Vec::new();
+
+                    match fs::metadata(val) {
+                        Ok(metadata) => {
+                            if metadata.is_file() {
+                                let path = std::path::PathBuf::from(val);
+                                if let Some(entry) = create::filter_dir(&path) {
+                                    entries.push(entry);
+                                }
+                            } else if metadata.is_dir() {
+                                if let Ok(dir) = fs::read_dir(val) {
+                                    entries.extend(
+                                        dir
+                                            .filter_map(Result::ok)
+                                            .filter_map(|path| create::dir(&path, &app.options))
+                                    );
+                                } else {
+                                    println!("Cannot read directory: {}", val);
+                                }
+                            }
+                        },
+                        Err(_) => println!("Cannot access path: {}", val)
+                    }
+
+                    app.entries.push(entries)
+                }
+            }
+
+            #[cfg(windows)] {
+            for val in values.iter()   {
+                let mut entries: Vec<Entry> = Vec::new();
+
+                    if val.contains('*')    {
+                        if let Ok(paths) = glob(&val) {
+                            entries.extend(
+                                paths
+                                    .filter_map(Result::ok)
+                                    .filter_map(|path| create::filter_dir(&path))
+                            );
+                        } else {
+                            println!("Error interpreting the pattern: {}", val);
+                        }
+                    } else {
+                        if let Ok(dir) = fs::read_dir::<&String>(&val)   {
+                            entries.extend(
+                                dir
+                                        .filter_map(Result::ok)
+                                        .filter_map(
+                                            |path|
+                                            create::dir(&path, &app.options)
+                                        )
+                            );
+                    } else {
+                        continue;
+                    };
+                    }
+                    app.entries.push(entries);
+                }
+            }
+
+            return Some(app)
         }
 
-        app.entries = entries;
         Some(app)
     }
 }
