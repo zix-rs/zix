@@ -6,3 +6,6 @@ edition = "2021"
 [dependencies]
 chrono = "0.4.39"
 colored = "3.0.0"
+terminal_size = "0.4.1"
+unicode-width = "0.2.0"
+zix-utils = { path = "../zix-utils", version = "*"}

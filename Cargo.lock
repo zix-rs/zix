@@ -440,6 +440,9 @@ version = "0.0.1"
 dependencies = [
  "chrono",
  "colored",
+ "terminal_size",
+ "unicode-width",
+ "zix-utils",
 ]
 
 [[package]]
@@ -452,3 +455,7 @@ dependencies = [
 [[package]]
 name = "zix-utils"
 version = "0.0.1"
+dependencies = [
+ "regex",
+ "terminal_size",
+]
