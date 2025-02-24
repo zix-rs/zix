@@ -1,5 +1,0 @@
-🛠 ¿Ideas para mejorar aún más tu parser?
-1️⃣ Lazy parsing: Procesa los argumentos solo cuando sean necesarios.
-2️⃣ Lookup rápido: Usa HashSet para opciones que no requieren orden.
-3️⃣ Subcommands eficientes: Detecta subcomandos antes de parsear opciones.
-
