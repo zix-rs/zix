@@ -20,7 +20,7 @@ cargo install zix
 ### Linux (using curl)
 You can quickly install zix using curl with our automated installation script:
 ```bash
-curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/zix-rs/zix/main/scripts/install.sh | sh
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/zix-rs/zix/main/scripts/install.sh | bash
 ```
 
 ### Windows (using powershell)
