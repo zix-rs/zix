@@ -1,3 +1,4 @@
+use std::io::{self, Write};
 
 pub const NAME: &str = "zx";
 pub const VERSION: &str = "v0.0.7";
@@ -27,8 +28,8 @@ LONG VIEW OPTIONS
         add a header row to each column
 "#;
 
-pub fn help()   {
-    println!("{}", &HELP)
+pub fn help() {
+    let _ = io::stdout().write_all(HELP.as_bytes());
 }
 
 pub fn version()    {
