@@ -1,7 +1,5 @@
 pub mod meta;
-use std::env;
-
-use zix_utils::parser::{self, parser};
+use zix_utils::parser::parser;
 
 enum ZixManagerCommands   {
     Help,
