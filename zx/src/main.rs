@@ -1,7 +1,6 @@
 pub mod app;
 pub mod output;
-pub mod ref_command;
-pub mod window;
+pub mod meta;
 
 use app::App;
 use zix_core::entry::create::Opti;
@@ -22,7 +21,7 @@ fn main() {
             } else if ops.contains(&Opti::List) {
                 output::list::base(dir_entries.as_mut_slice(), ops.clone());
             } else {
-                output::grid::base(vect_entry_name, &dir_entries);
+                output::grid::base(&dir_entries);
             }
         }
     }
