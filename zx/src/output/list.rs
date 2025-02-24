@@ -12,10 +12,9 @@ pub fn base(items: &mut [Entry], op: Vec<Opti>)   {
     let empt = items.iter().all(|f| f.lenght == "-".bright_white().to_string());
 
     let mut output = String::new();
-
+    println!("{:#?}",op.contains(&Opti::Headers));
     if !items.is_empty()  {
         if op.contains(&Opti::Headers)  {
-            #[cfg(windows)]
             println!(
                 "{} {:<16} {:<w$} {}",
                 "Mode".bold().underline(),
