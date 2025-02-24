@@ -57,7 +57,7 @@ pub fn dir(dir_entry: &DirEntry, optis: &Vec<Opti>) -> Option<Entry> {
             entry_dir.mode = entry_mode(metadata.clone(), permissions);
             if let Ok(modified_time) = metadata.modified()  {
                 let datetime: DateTime<Local> = modified_time.into();
-                entry_dir.last_modified = datetime.format("%d/%m/%Y\t%H:%M").to_string()
+                entry_dir.last_modified =                 datetime.format("%d %b %H:%M").to_string() 
             } else {
                 println!("Couldn't retrieve the last modified time")
             };
