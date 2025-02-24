@@ -3,8 +3,9 @@ use zix_core::entry::{
     kind::EntryKind,
     create::Opti
 };
-use crate::output::utils::strip_ansi_codes;
+
 use colored::Colorize;
+use zix_utils::ansi::strip_ansi_codes;
 pub fn base(items: &mut [Entry], op: Vec<Opti>)   {
     let max_length = items.iter().map(|s| s.lenght.len()).max().unwrap_or(1) + 5;
     let ml = items.iter().map(|s| strip_ansi_codes(&s.lenght).len()).max().unwrap_or(1)+1;
