@@ -16,13 +16,11 @@ Thank you for considering contributing to Zix! Contributions, whether they're bu
 3. **Install Dependencies**
    If the project has additional dependencies, make sure to install them as per the instructions in the README.
 
-4. **Run Tests**
-   Before making changes, ensure all tests pass:
+4. **Configure Git Commit Message**
+   Ensure your commit messages follow the correct convention by configuring Git to use the predefined message template:
    ```bash
-   cargo test
+   git config commit.template .gitmessage
    ```
-
----
 
 ## Contribution Guidelines
 
@@ -83,7 +81,6 @@ fix(cli): correct parsing of command-line arguments
    - Go to the original repository and open a pull request.
    - Provide a clear and concise description of your changes and their purpose.
 
----
 
 ## Reporting Issues
 
