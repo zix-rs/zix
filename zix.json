@@ -2,7 +2,7 @@
   "name": "zix",
   "bin": "zx",
   "dist": {
-    "latest": "0.0.7"
+    "latest": "0.0.8"
   },
   "versions": {
     "0.0.2": { "win": "https://github.com/zix-rs/zix/releases/download/v0.0.2/zx.exe" },
@@ -16,6 +16,10 @@
     "0.0.7": {
       "win": "https://github.com/zix-rs/zix/releases/download/v0.0.7/zx.exe",
       "lin": "https://github.com/zix-rs/zix/releases/download/v0.0.7/zx"
+    },
+    "0.0.8": {
+      "win": "https://github.com/zix-rs/zix/releases/download/v0.0.8/zx.exe",
+      "lin": "https://github.com/zix-rs/zix/releases/download/v0.0.8/zx"
     }
   }
 }
