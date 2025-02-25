@@ -7,8 +7,7 @@ use std::fs;
 pub mod create;
 pub mod utils;
 pub mod kind;
-pub mod entry;
-pub mod config;
+pub mod sets;
 
 use crate::entry::utils::is_executable;
 use crate::entry::sets::config_files;
