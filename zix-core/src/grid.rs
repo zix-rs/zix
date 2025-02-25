@@ -2,7 +2,8 @@ use std::fmt::Display;
 use zix_utils::{ansi, window};
 use unicode_width::UnicodeWidthStr;
 
-pub fn get_total_columns<T>(items: Vec<T>) -> usize
+// pub fn get_total_columns<T>(items: Vec<T>) -> usize
+pub fn get_total_columns<T>(items: &Vec<T>) -> usize
 where
     T: Display + std::fmt::Debug + Clone,
 {
@@ -17,9 +18,8 @@ where
         let item_str = item.to_string();
         let item_string = ansi::strip_ansi_codes(&item_str.as_str());
         let width = UnicodeWidthStr::width(item_string.as_str());
-
         if current_width + width + separator <= terminal_width.into()  {
-            current_width += width + 10;
+            current_width += width + separator;
             total_columns_pre += 1;
         } else {
             columns_total.push(total_columns_pre);
@@ -36,7 +36,6 @@ where
     } else {
         *columns_total.iter().min().unwrap_or(&1).max(&1)
     };
-
     total_columns
 }
 
@@ -58,7 +57,7 @@ where
         return output
     }
 
-    let total_columns = get_total_columns(items.clone());
+    let total_columns = get_total_columns(&items.clone());
 
     let mut grid: Vec<Vec<String>> = vec![Vec::new(); total_columns];
 
