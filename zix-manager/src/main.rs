@@ -1,6 +1,7 @@
 pub mod meta;
 use zix_utils::parser::parser;
 
+#[allow(dead_code)]
 enum ZixManagerCommands   {
     Help,
     Update,
@@ -10,6 +11,7 @@ enum ZixManagerCommands   {
     List
 }
 
+#[allow(dead_code)]
 struct ZixManager   {
     options: Vec<ZixManagerCommands>
 }
