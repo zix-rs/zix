@@ -45,6 +45,18 @@ impl Entry  {
         Self::default()
     }
 
+    pub fn shorten_name(&mut self) {
+        let mut shorten_name = String::new();
+        if self.name.chars().count() > 25 {
+            let start: String = self.name.chars().take(5).collect();
+            let end: String = self.name.chars().rev().take(7).collect::<String>().chars().rev().collect();
+            shorten_name = format!("{}...{}", start, end)
+        } else {
+            shorten_name = self.name.to_string();
+        }
+        self.name = shorten_name
+    }
+
     pub fn colored_name(&mut self)  {
         self.output_name = match self.entry_kind {
             EntryKind::Hidden =>  self.name.red().bold().to_string(),
