@@ -22,10 +22,6 @@ pub fn config_files() -> HashSet<&'static str> {
     configs
 }
 
-pub fn is_config_file(filename: &str, configs: &HashSet<&str>) -> bool {
-    configs.contains(filename) || configs.iter().any(|ext| filename.ends_with(ext))
-}
-
 pub fn get_language_extensions() -> HashSet<&'static str> {
     let extensions: HashSet<&'static str> = [
         "rs",   // Rust
@@ -53,4 +49,8 @@ pub fn get_language_extensions() -> HashSet<&'static str> {
     .collect();
 
     extensions
+}
+
+pub fn is_file_in_set(filename: &str, set: &HashSet<&str>) -> bool {
+    set.contains(filename) || set.iter().any(|ext| filename.ends_with(ext))
 }

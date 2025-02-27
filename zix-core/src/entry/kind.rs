@@ -1,4 +1,6 @@
-#[derive(Clone, Debug)]
+use std::collections::HashMap;
+
+#[derive(Clone, Debug , PartialEq)]
 pub enum EntryKind {
     File,       // File
     Directory,  // Dir
@@ -11,22 +13,33 @@ pub enum EntryKind {
 }
 
 impl EntryKind {
-    pub fn icons(self, filename: &str) -> &'static str  {
+    pub fn icons(&self, filename: &str) -> &'static str {
         match self {
-            Self::File => {
-                if filename.ends_with(".gitignore")  {
-                    "\u{e702}"
-                } else if filename.ends_with(".docx") {
-                    "\u{f1392}"
-                } else if filename.ends_with(".git") {
-                    "\u{f1d3}"
-                } else if filename.ends_with("README.md") {
-                    "\u{eda4}"
-                } else {
-                    return "\u{f0219}"
-                }
-            },
-            _ => ""
+            Self::File => Self::file_icon(filename),
+            Self::Directory => "\u{f115} ",
+            Self::Symlink => "\u{f838} ",
+            Self::Hidden => "\u{f023} ",
+            Self::Executable => "\u{f489} ",
+            Self::Archive => "\u{f187} ",
+            Self::Config => "\u{e5fc} ",
+            Self::Other => "\u{f128} ",
         }
+    }
+
+    fn file_icon(filename: &str) -> &'static str {
+        let icon_map: HashMap<&str, &str> = HashMap::from([
+            (".gitignore", "\u{e702} "),
+            (".docx", "\u{f1392} "),
+            (".git", "\u{f1d3} "),
+            ("README.md", "\u{eda4} "),
+        ]);
+
+        for (extension, icon) in icon_map {
+            if filename.ends_with(extension) {
+                return icon;
+            }
+        }
+
+        "\u{f0219} " // Default
     }
 }

@@ -8,7 +8,7 @@ use std::{
 use chrono::{DateTime, Local};
 use colored::Colorize;
 use super::{kind::EntryKind, utils::{entry_mode, format_file_size, is_executable}, Entry};
-use zix_utils::type_of;
+
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Opti   {
     All,
@@ -73,6 +73,9 @@ pub fn dir(dir_entry: &DirEntry, optis: &Vec<Opti>) -> Option<Entry> {
         }
 
         entry_dir.name = filename.to_string();
+        if optis.contains(&Opti::Icons) {
+            entry_dir.add_icon();
+        }
         entry_dir.colored_name();
     }
 

@@ -3,7 +3,7 @@ use kind::EntryKind;
 use colored::Colorize;
 use std::fs::Metadata;
 use std::fs;
-
+use unicode_width::UnicodeWidthStr;
 pub mod create;
 pub mod utils;
 pub mod kind;
@@ -11,7 +11,7 @@ pub mod sets;
 
 use crate::entry::utils::is_executable;
 use crate::entry::sets::config_files;
-use crate::entry::sets::is_config_file;
+use crate::entry::sets::is_file_in_set;
 
 #[derive(Clone, Debug)]
 pub struct Entry    {
@@ -22,7 +22,8 @@ pub struct Entry    {
     pub entry_kind: EntryKind,
     pub symlink: PathBuf,
     pub path: PathBuf,
-    pub output_name: String
+    pub output_name: String,
+    pub icon: String,
 }
 
 impl Default for Entry {
@@ -36,6 +37,7 @@ impl Default for Entry {
             symlink: PathBuf::new(),
             path: PathBuf::new(),
             output_name: String::new(),
+            icon: String::new()
         }
     }
 }
@@ -57,48 +59,54 @@ impl Entry  {
         self.name = shorten_name
     }
 
-    pub fn colored_name(&mut self)  {
-        self.output_name = match self.entry_kind {
-            EntryKind::Hidden =>  self.name.red().bold().to_string(),
-            EntryKind::Directory => self.name.green().bold().to_string(),
-            EntryKind::Config => self.name.yellow().underline().to_string(),
-            EntryKind::Symlink => self.name.bright_blue().to_string(),
-            _ => self.name.normal().to_string()
+    pub fn add_icon(&mut self) {
+        let icon = self.entry_kind.icons(self.name.as_str()).to_string();
+        self.icon = icon;
+    }
+
+    pub fn colored_name(&mut self) {
+        let colored_name = match self.entry_kind {
+            EntryKind::Hidden => self.name.red().bold(),
+            EntryKind::Directory => self.name.green().bold(),
+            EntryKind::Config => self.name.yellow().underline(),
+            EntryKind::Symlink => self.name.bright_blue(),
+            _ => self.name.normal(),
         };
+
+        let icon_width = UnicodeWidthStr::width(self.icon.as_str());
+
+        let padding = if icon_width > 1 {
+            " ".repeat(icon_width - 1)
+        } else {
+            "".to_string()
+        };
+
+        self.output_name = format!("{}{}{}", self.icon, padding, colored_name);
     }
 
     pub fn entry_kind(&mut self, meta: Metadata, filename: &str) {
-        let pat = filename.to_string();
         let file_type = meta.file_type();
-        if filename.starts_with('.') {
-            self.entry_kind = EntryKind::Hidden;
-            return;
-        }
 
-        if let Ok(target) = fs::read_link(self.path.clone()) {
-            self.entry_kind = EntryKind::Symlink;
+        self.entry_kind = if filename.starts_with('.') {
+            EntryKind::Hidden
+        } else if let Ok(target) = fs::read_link(self.path.clone()) {
             self.symlink = target;
-            return;
-        }
-
-        if file_type.is_file() {
-            if pat.ends_with(".zip") || pat.ends_with(".tar") {
-                self.entry_kind = EntryKind::Archive;
+            EntryKind::Symlink
+        } else if file_type.is_file() {
+            if filename.ends_with(".zip") || filename.ends_with(".tar") {
+                EntryKind::Archive
             } else if is_executable(filename, &meta) {
-                self.entry_kind = EntryKind::Executable;
+                EntryKind::Executable
+            } else if is_file_in_set(filename, &config_files()) {
+                EntryKind::Config
             } else {
-                self.entry_kind = EntryKind::File;
+                EntryKind::File
             }
-
-            if is_config_file(filename, &config_files()) {
-                self.entry_kind = EntryKind::Config
-            }
-
         } else if file_type.is_dir() {
-            self.entry_kind = EntryKind::Directory;
+            EntryKind::Directory
         } else {
-            self.entry_kind = EntryKind::Other;
-        }
+            EntryKind::Other
+        };
     }
 }
 
