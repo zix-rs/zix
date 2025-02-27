@@ -46,6 +46,7 @@ impl App    {
                     "--list" | "-l" => app.options.push(Opti::List),
                     "--tree" | "-t" => app.options.push(Opti::Tree),
                     "--grid" | "-g" => app.options.push(Opti::Grid),
+                    "--icons" | "-i" => app.options.push(Opti::Icons),
                     _ => {
                         println!(
                             "'{}' is not a valid option\nType 'zx --help' for more information.",

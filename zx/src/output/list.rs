@@ -1,6 +1,5 @@
 use zix_core::entry::{
     Entry,
-    kind::EntryKind,
     create::Opti
 };
 use zix_core::grid::{out, get_total_columns, get_grid};
@@ -72,7 +71,7 @@ pub fn base(items: &mut [Entry], op: Vec<Opti>)   {
 
     }
 
-    let mut output_headers: Vec<String> = Vec::new();
+    let output_headers: Vec<String> = Vec::new();
     if op.contains(&Opti::Grid) {
         let binding = output.clone();
         let mut output_grid: Vec<String> = binding

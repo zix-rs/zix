@@ -1,5 +1,5 @@
 use std::{fs, path::PathBuf};
-use colored::{ColoredString, Colorize};
+use colored::{Colorize};
 use zix_core::entry::{
     kind::EntryKind,
     Entry,
@@ -7,25 +7,9 @@ use zix_core::entry::{
     create::Opti
 };
 
-enum TreeConnector {
-    Branch, // ├─
-    LastBranch, // └──
-    Vertical, // │
-    Empty // Empty
-}
+use zix_core::tree::TreeConnector;
 
-impl TreeConnector {
-    fn as_str(&self) -> ColoredString {
-        match self {
-            TreeConnector::Branch => "├──".bright_black(),
-            TreeConnector::Vertical => "│".bright_black(),
-            TreeConnector::LastBranch => "└──".bright_black(),
-            TreeConnector::Empty => " ".bright_black()
-        }
-    }
-}
-
-fn recursive(pa: &PathBuf, ki: EntryKind, optis: Vec<Opti>, indent: &String) {
+fn recursive(pa: &PathBuf, ki: EntryKind, optis: Vec<Opti>, indent: &String, item: Entry) {
     if let EntryKind::Directory = ki {
         if let Ok(dir) = fs::read_dir(pa) {
             let entries: Vec<_> = dir.collect();
@@ -33,10 +17,8 @@ fn recursive(pa: &PathBuf, ki: EntryKind, optis: Vec<Opti>, indent: &String) {
 
             for (i, entry) in entries.into_iter().enumerate() {
                 if let Ok(entry) = entry {
-                    if let Ok(ft) = entry.file_type() {
+                    if let Some(ite) = create::dir(&entry, &optis) {
                         let is_last = i == total - 1;
-                        let name = entry.file_name().to_string_lossy().to_string();
-
                         println!(
                             "{}{} {}",
                             indent,
@@ -45,10 +27,11 @@ fn recursive(pa: &PathBuf, ki: EntryKind, optis: Vec<Opti>, indent: &String) {
                             } else {
                                 TreeConnector::Branch.as_str()
                             },
-                            name
+                            ite.output_name
                         );
 
-                        if ft.is_dir() {
+
+                        if ite.entry_kind == EntryKind::Directory {
                             let new_indent = format!(
                                 "{}{}   ",
                                 indent,
@@ -60,8 +43,9 @@ fn recursive(pa: &PathBuf, ki: EntryKind, optis: Vec<Opti>, indent: &String) {
                             );
 
                             if let Some(dir_entry) = create::dir(&entry, &optis) {
-                                recursive(&dir_entry.path, dir_entry.entry_kind, optis.clone(), &new_indent);
+                                recursive(&dir_entry.path, dir_entry.entry_kind, optis.clone(), &new_indent, item.clone());
                             }
+
                         }
                     }
                 }
@@ -83,7 +67,7 @@ pub fn base(items: &[Entry], ops: Vec<Opti>) {
                     } else {
                         TreeConnector::Branch.as_str()
                     },
-                    it.name.bright_green().bold()
+                    it.output_name
                 );
             },
             _ => {
@@ -94,7 +78,7 @@ pub fn base(items: &[Entry], ops: Vec<Opti>) {
                     } else {
                         TreeConnector::Branch.as_str()
                     },
-                    it.name
+                    it.output_name
                 );
             }
         }
@@ -106,6 +90,7 @@ pub fn base(items: &[Entry], ops: Vec<Opti>) {
             it.entry_kind.clone(),
             ops.clone(),
             if is_last { &last } else { &conti },
+            items[i].clone()
         );
     }
 }
