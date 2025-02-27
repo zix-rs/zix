@@ -2,7 +2,6 @@ use std::fmt::Display;
 use zix_utils::{ansi, window};
 use unicode_width::UnicodeWidthStr;
 
-// pub fn get_total_columns<T>(items: Vec<T>) -> usize
 pub fn get_total_columns<T>(items: &Vec<T>) -> usize
 where
     T: Display + std::fmt::Debug + Clone,
@@ -14,28 +13,32 @@ where
     let mut columns_total: Vec<_> = vec![];
     let mut total_columns_pre = 0;
     let separator = UnicodeWidthStr::width("_");
-    for item in items.iter()  {
+    for (idx, item) in items.iter().enumerate()  {
         let item_str = item.to_string();
         let item_string = ansi::strip_ansi_codes(&item_str.as_str());
         let width = UnicodeWidthStr::width(item_string.as_str());
-        if current_width + width + separator <= terminal_width.into()  {
-            current_width += width + separator;
+        if current_width + width + 2 <= terminal_width.into()  {
+            current_width += width + 2;
             total_columns_pre += 1;
         } else {
             columns_total.push(total_columns_pre);
-            current_width = width + separator;
+            if idx == items.len() - 1   {
+                break;
+            }
+            current_width = width ;
             total_columns_pre = 1;
+
         }
     }
     if total_columns_pre > 0 {
         columns_total.push(total_columns_pre);
     }
-
     let total_columns = if columns_total.is_empty() {
         1
     } else {
-        *columns_total.iter().min().unwrap_or(&1).max(&1)
+        *columns_total.iter().min().unwrap_or(&1)
     };
+
     total_columns
 }
 
@@ -47,18 +50,11 @@ where
     column       column       column      <----- columns: 3
     vec[vec[]; columns]
 */
-pub fn out<T: Display>(items: Vec<T>) -> String
+pub fn get_grid<T>(items: Vec<T>) -> Vec<Vec<String>>
 where
     T: Display + std::fmt::Debug + Clone,
 {
-    let mut output = String::new();
-    if items.len() == 0 {
-        output.push_str("There are no items to display");
-        return output
-    }
-
     let total_columns = get_total_columns(&items.clone());
-
     let mut grid: Vec<Vec<String>> = vec![Vec::new(); total_columns];
 
     let max_items = items.len();
@@ -73,6 +69,20 @@ where
         }
         i += 1;
     }
+
+    grid
+}
+pub fn out<T>(items: Vec<T>) -> String
+where
+    T: Display + std::fmt::Debug + Clone,
+{
+    let mut output = String::new();
+    if items.len() == 0 {
+        output.push_str("There are no items to display");
+        return output
+    }
+    let total_columns = get_total_columns(&items);
+    let grid = get_grid(items.clone());
     let rows = grid.iter().map(|f| f.len()).max().unwrap_or(0);
 
     for row in 0..rows {
