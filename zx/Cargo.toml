@@ -9,12 +9,8 @@ glob = "0.3.2"
 regex = "1.11.1"
 terminal_size = "0.4.1"
 unicode-width = "0.2.0"
-zix-core = { git = "https://github.com/zix-rs/zix", package = "zix-core", version="*" }
-zix-utils = { git = "https://github.com/zix-rs/zix", package = "zix-utils", version="*"}
-
-# For local enviroment
-# zix-core = { path = "../zix-core"}
-# zix-utils = { path = "../zix-utils"}
+zix-core = { path = "../zix-core"}
+zix-utils = { path = "../zix-utils"}
 
 [[bin]]
 name = "zx"
