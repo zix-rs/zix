@@ -16,7 +16,7 @@ pub fn base(items: &mut [Entry], op: Vec<Opti>)   {
     if !items.is_empty()  {
         if op.contains(&Opti::Headers) && !op.contains(&Opti::Grid)  {
             #[cfg(windows)]
-            output.push_str(format!(
+            output.push_str(&format!(
                 "{} {:<13} {:<w$} {}\n",
                 "Mode".bold().underline(),
                 "Last Modified".bold().underline(),
@@ -50,7 +50,7 @@ pub fn base(items: &mut [Entry], op: Vec<Opti>)   {
                 &format!(
                   "{:<6} {:<11} {:>width$} {}\n",
                   entry.mode,
-                  format!("{} ", modified_display),
+                  modified_display,
                   entry.lenght.bold(),
                   entry.output_name,
                   width = max_length
@@ -106,7 +106,8 @@ pub fn base(items: &mut [Entry], op: Vec<Opti>)   {
         .collect();
 
         for i in 0..total_headers {
-            let padding = max_lengths[i].saturating_sub(strip_ansi_codes(header.as_str()).len());
+            let padding = max_lengths[i].saturating_sub(strip_ansi_codes(header.as_str()).chars().count());
+
             print!("{:>width$}{}  ", header.normal(), " ".repeat(padding), width = max_lengths[i]);
             if i == total_headers - 1   {
                 print!("\n");

@@ -73,15 +73,7 @@ impl Entry  {
             _ => self.name.normal(),
         };
 
-        let icon_width = UnicodeWidthStr::width(self.icon.as_str());
-
-        let padding = if icon_width > 1 {
-            " ".repeat(icon_width - 1)
-        } else {
-            "".to_string()
-        };
-
-        self.output_name = format!("{}{}{}", self.icon, padding, colored_name);
+        self.output_name = format!("{}{}", self.icon, colored_name);
     }
 
     pub fn entry_kind(&mut self, meta: Metadata, filename: &str) {

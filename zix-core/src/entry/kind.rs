@@ -16,22 +16,22 @@ impl EntryKind {
     pub fn icons(&self, filename: &str) -> &'static str {
         match self {
             Self::File => Self::file_icon(filename),
-            Self::Directory => "\u{f115} ",
-            Self::Symlink => "\u{f838} ",
-            Self::Hidden => "\u{f023} ",
-            Self::Executable => "\u{f489} ",
-            Self::Archive => "\u{f187} ",
-            Self::Config => "\u{e5fc} ",
-            Self::Other => "\u{f128} ",
+            Self::Directory => "\u{e5ff}",
+            Self::Symlink => "\u{f838}",
+            Self::Hidden => "\u{f023}",
+            Self::Executable => "\u{f489}",
+            Self::Archive => "\u{f187}",
+            Self::Config => "\u{e5fc}",
+            Self::Other => "\u{f128}",
         }
     }
 
     fn file_icon(filename: &str) -> &'static str {
         let icon_map: HashMap<&str, &str> = HashMap::from([
-            (".gitignore", "\u{e702} "),
-            (".docx", "\u{f1392} "),
-            (".git", "\u{f1d3} "),
-            ("README.md", "\u{eda4} "),
+            (".gitignore", "\u{e702}"),
+            (".docx", "\u{f1392}"),
+            (".git", "\u{f1d3}"),
+            ("README.md", "\u{eda4}"),
         ]);
 
         for (extension, icon) in icon_map {
@@ -40,6 +40,6 @@ impl EntryKind {
             }
         }
 
-        "\u{f0219} " // Default
+        "\u{f0219}" // Default
     }
 }
