@@ -8,7 +8,7 @@ pub mod create;
 pub mod utils;
 pub mod kind;
 pub mod sets;
-
+pub mod options;
 use crate::entry::utils::is_executable;
 use crate::entry::sets::config_files;
 use crate::entry::sets::is_file_in_set;

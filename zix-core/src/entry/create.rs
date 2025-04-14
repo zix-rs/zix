@@ -7,19 +7,7 @@ use std::{
 };
 use chrono::{DateTime, Local};
 use colored::Colorize;
-use super::{kind::EntryKind, utils::{entry_mode, format_file_size, is_executable}, Entry};
-
-#[derive(Clone, Copy, PartialEq, Debug)]
-pub enum Opti   {
-    All,
-    List,
-    Help,
-    Version,
-    Headers,
-    Icons,
-    Tree,
-    Grid
-}
+use super::{kind::EntryKind, options::Opti, utils::{entry_mode, format_file_size, is_executable}, Entry};
 
 pub fn filter_dir(path: &PathBuf) -> Option<Entry> {
     let meta = fs::metadata(path).ok()?;
