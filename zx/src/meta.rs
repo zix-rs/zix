@@ -1,5 +1,7 @@
 use std::io::{self, Write};
 
+use zix_core::entry::options::Opti;
+
 pub const NAME: &str = "zx";
 pub const VERSION: &str = "v0.0.8";
 pub const HELP: &str = r#"USAGE:
@@ -29,7 +31,25 @@ LONG VIEW OPTIONS
 "#;
 
 pub fn help() {
-    let _ = io::stdout().write_all(HELP.as_bytes());
+    let mut out = String::from("USAGE: zx <option> <files...>\n");
+    out += "\nZIX OPTIONS:\n";
+
+    let options = [
+        Opti::All,
+        Opti::Grid,
+        Opti::Headers,
+        Opti::Help,
+        Opti::Icons,
+        Opti::List,
+        Opti::Tree,
+        Opti::Version
+    ];
+
+    for option in &options {
+        out += &format!("  {}, {}\t {}\n", option.as_flag(), option.as_short_flag().unwrap_or(""), option.description());
+    }
+
+    let _ = io::stdout().write_all(out.as_bytes());
 }
 
 pub fn version()    {

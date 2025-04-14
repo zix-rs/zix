@@ -1,44 +1,37 @@
 pub mod meta;
-use zix_utils::parser::parser;
-
-enum ZixManagerCommands   {
-    Help,
-    Update,
+pub mod com;
+pub mod out;
+use com::ZixManagerCommands;
+use com::ZixManagerCommands::{
     Init,
+    List,
     Install,
+    Update,
+    Help,
     Version,
-    List
-}
-
-struct ZixManager   {
-    options: Vec<ZixManagerCommands>
-}
-
-impl ZixManager {
-    pub fn new() -> ZixManager {
-        ZixManager  {
-            options: Vec::new()
-        }
-    }
-}
+    Neither
+};
+use zix_utils::parser::parser;
 
 fn main() {
     if let Some((
         co,
         _op,
         _val
-    )) = parser(true, "", "", "") {
+    )) = parser(
+        true,
+        "",
+        "",
+        ""
+    ) {
         match co.as_str()   {
-            "init" => println!("init"),
-            "list" | "l" => println!("list"),
-            "install" | "i" => println!("install"),
-            "help" | "h" => meta::help(),
-            "version" | "v" => meta::version(),
-            _ => {
-                println!(
-                    "That's not a valid option\nType 'zix help' for more information."
-                );
-            }
+            "init"          => Init.run(),
+            "list" | "l"    => List.run(),
+            "install" | "i" => Install.run(),
+            "help" | "h"    => Help.run(),
+            "update"        => Update.run(),
+            "version" | "v" => Version.run(),
+            _               => Neither.run(),
         }
     }
 }

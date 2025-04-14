@@ -2,9 +2,9 @@ use std::fs;
 
 use zix_core::entry::{
     create,
-    create::Opti
+    options::Opti,
+    Entry
 };
-use zix_core::entry::{Entry};
 
 use zix_utils::parser::parser;
 use crate::meta::{help, version, NAME, VERSION};
@@ -46,6 +46,7 @@ impl App    {
                     "--list" | "-l" => app.options.push(Opti::List),
                     "--tree" | "-t" => app.options.push(Opti::Tree),
                     "--grid" | "-g" => app.options.push(Opti::Grid),
+                    "--icons" | "-i" => app.options.push(Opti::Icons),
                     _ => {
                         println!(
                             "'{}' is not a valid option\nType 'zx --help' for more information.",

@@ -4,5 +4,6 @@ members = [
     "zix-core",
     "zix-manager",
     "zx",
-    "zix-utils"
+    "zix-utils",
+    "zix-macro"
 ]
