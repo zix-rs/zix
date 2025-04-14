@@ -43,6 +43,6 @@ mod tests {
     fn test_large_input() {
         let items: Vec<String> = (0..50).map(|i| format!("item {}", i)).collect();
         let result = out(items);
-        assert!(result.lines().count() > 1); // Ensure multiple rows are created
+        assert!(result.lines().count() > 1);
     }
 }

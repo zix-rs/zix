@@ -2,44 +2,28 @@ use std::fmt::Display;
 use zix_utils::{ansi, window};
 use unicode_width::UnicodeWidthStr;
 
-pub fn get_total_columns<T>(items: &Vec<T>) -> usize
+pub fn get_total_columns<T>(items: &[T]) -> usize
 where
     T: Display + std::fmt::Debug + Clone,
 {
     let (term_width, _) = window::get_terminal_size();
     let terminal_width = window::adjust_terminal_width(term_width);
 
-    let mut current_width = 0;
-    let mut columns_total: Vec<_> = vec![];
-    let mut total_columns_pre = 0;
-    let separator = UnicodeWidthStr::width("_");
-    for (idx, item) in items.iter().enumerate()  {
-        let item_str = item.to_string();
-        let item_string = ansi::strip_ansi_codes(&item_str.as_str());
-        let width = UnicodeWidthStr::width(item_string.as_str());
-        if current_width + width + 2 <= terminal_width.into()  {
-            current_width += width + 2;
-            total_columns_pre += 1;
-        } else {
-            columns_total.push(total_columns_pre);
-            if idx == items.len() - 1   {
-                break;
-            }
-            current_width = width ;
-            total_columns_pre = 1;
+    let max_item_width = items
+        .iter()
+        .map(|item| {
+            let stripped = ansi::strip_ansi_codes(&item.to_string());
+            UnicodeWidthStr::width(stripped.as_str()) + 2
+        })
+        .max()
+        .unwrap_or(0);
 
-        }
+    if max_item_width == 0 {
+        return 1;
     }
-    if total_columns_pre > 0 {
-        columns_total.push(total_columns_pre);
-    }
-    let total_columns = if columns_total.is_empty() {
-        1
-    } else {
-        *columns_total.iter().min().unwrap_or(&1)
-    };
 
-    total_columns
+    let total_columns = (terminal_width / max_item_width).max(1);
+    total_columns.min(items.len())
 }
 
 /*
@@ -54,20 +38,16 @@ pub fn get_grid<T>(items: Vec<T>) -> Vec<Vec<String>>
 where
     T: Display + std::fmt::Debug + Clone,
 {
-    let total_columns = get_total_columns(&items.clone());
-    let mut grid: Vec<Vec<String>> = vec![Vec::new(); total_columns];
+    let total_columns = get_total_columns(&items);
+    let total_items = items.len();
 
-    let max_items = items.len();
-    let mut i = 0;
-    let mut j = 0;
-    while i < max_items {
-        grid[j].push(items[i].to_string());
-        if j < total_columns - 1 {
-            j += 1;
-        } else {
-            j = 0;
-        }
-        i += 1;
+    let total_rows = (total_items + total_columns - 1) / total_columns;
+
+    let mut grid: Vec<Vec<String>> = vec![Vec::with_capacity(total_rows); total_columns];
+
+    for (idx, item) in items.into_iter().enumerate() {
+        let col = idx % total_columns;
+        grid[col].push(item.to_string());
     }
 
     grid
@@ -77,33 +57,46 @@ where
     T: Display + std::fmt::Debug + Clone,
 {
     let mut output = String::new();
-    if items.len() == 0 {
+    if items.is_empty() {
         output.push_str("There are no items to display");
-        return output
+        return output;
     }
-    let total_columns = get_total_columns(&items);
-    let grid = get_grid(items.clone());
-    let rows = grid.iter().map(|f| f.len()).max().unwrap_or(0);
 
-    for row in 0..rows {
+    let grid = get_grid(items);
+    let total_columns = grid.len();
+    if total_columns == 0 {
+        return output;
+    }
+
+    let col_widths: Vec<usize> = grid
+        .iter()
+        .map(|column| {
+            column
+                .iter()
+                .map(|item| {
+                    let stripped = ansi::strip_ansi_codes(item);
+                    UnicodeWidthStr::width(stripped.as_str())
+                })
+                .max()
+                .unwrap_or(0) + 2 
+        })
+        .collect();
+
+    let total_rows = grid[0].len();
+
+    for row in 0..total_rows {
         for col in 0..total_columns {
-            let max_lenght_col = grid[col]
-            .iter()
-            .map(|f| ansi::strip_ansi_codes(f))
-            .map(|name| UnicodeWidthStr::width(name.as_str()))
-            .max()
-            .unwrap_or(0)
-            + 2;
             if let Some(item) = grid[col].get(row) {
                 let stripped = ansi::strip_ansi_codes(item);
-                let real_width = UnicodeWidthStr::width(stripped.as_str());
-                let padding = max_lenght_col.saturating_sub(real_width);
-                output.push_str(&format!("{}{}", item, " ".repeat(padding)));
+                let width = UnicodeWidthStr::width(stripped.as_str());
+                let padding = col_widths[col].saturating_sub(width);
+                output.push_str(item);
+                output.push_str(&" ".repeat(padding));
             } else {
-                output.push_str(&" ".repeat(max_lenght_col));
+                output.push_str(&" ".repeat(col_widths[col]));
             }
         }
-        output.push('\n')
+        output.push('\n');
     }
 
     output
