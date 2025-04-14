@@ -2,9 +2,9 @@ use std::fs;
 
 use zix_core::entry::{
     create,
-    create::Opti
+    options::Opti,
+    Entry
 };
-use zix_core::entry::{Entry};
 
 use zix_utils::parser::parser;
 use crate::meta::{help, version, NAME, VERSION};

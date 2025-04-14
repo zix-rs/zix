@@ -1,6 +1,6 @@
 use zix_core::entry::{
     Entry,
-    create::Opti
+    options::Opti
 };
 use zix_core::grid::{out, get_total_columns, get_grid};
 use colored::Colorize;

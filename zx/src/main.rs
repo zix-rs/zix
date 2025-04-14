@@ -3,7 +3,8 @@ pub mod output;
 pub mod meta;
 
 use app::App;
-use zix_core::entry::create::Opti;
+use libloading::{Library, Symbol};
+use zix_core::{entry::options::Opti, plugin::Plugin};
 fn main() {
     if let Some(app) = App::init() {
         let mut items = app.entries;
