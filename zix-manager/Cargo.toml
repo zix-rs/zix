@@ -4,7 +4,10 @@ version = "0.0.1"
 edition = "2021"
 
 [dependencies]
+dirs = "6.0.0"
+libloading = "0.8.6"
 zix-utils = { path = "../zix-utils", version = "*"}
+zix-core = { path = "../zix-core" }
 
 [[bin]]
 name = "zix"
