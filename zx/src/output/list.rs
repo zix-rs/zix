@@ -4,6 +4,7 @@ use zix_core::entry::{
 };
 use zix_core::grid::{out, get_total_columns, get_grid};
 use colored::Colorize;
+use zix_core::long;
 use zix_utils::ansi::strip_ansi_codes;
 
 pub fn base(items: &mut [Entry], op: Vec<Opti>)   {
@@ -38,36 +39,37 @@ pub fn base(items: &mut [Entry], op: Vec<Opti>)   {
     }
 
     for entry in items.iter_mut()   {
-            let v: Vec<&str> = entry.last_modified.split('\t').collect();
-            let modified_display = if !v.is_empty() { v[0].yellow() } else { "N/A".yellow() };
+        output.push_str(&long::long(entry, empt, max_length));
+        // let v: Vec<&str> = entry.last_modified.split('\t').collect();
+        // let modified_display = if !v.is_empty() { v[0].yellow() } else { "N/A".yellow() };
 
-            if empt && entry.lenght == "-".bright_white().to_string() {
-                entry.lenght = "   -".bright_white().to_string();
-            }
+        // if empt && entry.lenght == "-".bright_white().to_string() {
+        //     entry.lenght = "   -".bright_white().to_string();
+        // }
 
-            #[cfg(windows)]
-            output.push_str(
-                &format!(
-                  "{:<6} {:<11} {:>width$} {}\n",
-                  entry.mode,
-                  modified_display,
-                  entry.lenght.bold(),
-                  entry.output_name,
-                  width = max_length
-                )
-            );
+        // #[cfg(windows)]
+        // output.push_str(
+        //     &format!(
+        //       "{:<6} {:<11} {:>width$} {}\n",
+        //       entry.mode,
+        //       modified_display,
+        //       entry.lenght.bold(),
+        //       entry.output_name,
+        //       width = max_length
+        //     )
+        // );
 
-            #[cfg(unix)]
-            output.push_str(
-                &format!(
-                  "{}   {:<11} {:>width$} {}\n",
-                  entry.mode,
-                  modified_display,
-                  entry.lenght.bold(),
-                  entry.output_name,
-                  width = max_length
-                )
-            );
+        // #[cfg(unix)]
+        // output.push_str(
+        //     &format!(
+        //       "{}   {:<11} {:>width$} {}\n",
+        //       entry.mode,
+        //       modified_display,
+        //       entry.lenght.bold(),
+        //       entry.output_name,
+        //       width = max_length
+        //     )
+        // );
 
     }
 

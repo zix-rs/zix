@@ -7,7 +7,15 @@ use std::{
 };
 use chrono::{DateTime, Local};
 use colored::Colorize;
-use super::{kind::EntryKind, options::Opti, utils::{entry_mode, format_file_size, is_executable}, Entry};
+use super::{
+    kind::EntryKind,
+    options::Opti,
+    utils::{
+        entry_mode,
+        format_file_size
+    },
+    Entry
+};
 
 pub fn filter_dir(path: &PathBuf) -> Option<Entry> {
     let meta = fs::metadata(path).ok()?;
@@ -30,6 +38,7 @@ pub fn filter_dir(path: &PathBuf) -> Option<Entry> {
 pub fn dir(dir_entry: &DirEntry, optis: &Vec<Opti>) -> Option<Entry> {
     let mut entry_dir = Entry::new();
     if let Some(filename) = dir_entry.file_name().to_str() {
+
         if filename.starts_with('.') && !optis.contains(&Opti::All) {
             return None;
         }
@@ -60,7 +69,15 @@ pub fn dir(dir_entry: &DirEntry, optis: &Vec<Opti>) -> Option<Entry> {
             }
         }
 
-        entry_dir.name = filename.to_string();
+        if filename.len() > 26 {
+            if !optis.contains(&Opti::List) {
+                entry_dir.name = truncate_filename(&filename, 30);
+            } else {
+                entry_dir.name = filename.to_string();
+            }
+        } else {
+            entry_dir.name = filename.to_string();
+        }
         if optis.contains(&Opti::Icons) {
             entry_dir.add_icon();
         }
@@ -68,4 +85,18 @@ pub fn dir(dir_entry: &DirEntry, optis: &Vec<Opti>) -> Option<Entry> {
     }
 
     Some(entry_dir)
+}
+
+fn truncate_filename(filename: &str, max_length: usize) -> String {
+    if filename.len() <= max_length {
+        return filename.to_string();
+    }
+
+    let prefix_len = max_length / 2;
+    let suffix_len = max_length - prefix_len - 2;
+
+    let prefix: String = filename.chars().take(prefix_len).collect();
+    let suffix: String = filename.chars().rev().take(suffix_len).collect::<String>().chars().rev().collect();
+
+    format!("{}..{}", prefix, suffix)
 }

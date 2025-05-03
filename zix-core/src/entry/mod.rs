@@ -3,7 +3,6 @@ use kind::EntryKind;
 use colored::Colorize;
 use std::fs::Metadata;
 use std::fs;
-use unicode_width::UnicodeWidthStr;
 pub mod create;
 pub mod utils;
 pub mod kind;

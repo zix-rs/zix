@@ -1,9 +1,5 @@
-use zix_core::entry::{
-    Entry,
-    kind::EntryKind
-};
-use colored::Colorize;
-use zix_core::grid::out;
+use zix_core::entry::Entry;
+use zix_core::grid;
 
 pub fn base(items: &[Entry]) {
     let mut vector: Vec<String> = vec![];
@@ -12,6 +8,6 @@ pub fn base(items: &[Entry]) {
         vector.push(it.output_name.clone());
     }
 
-    let output = out(vector);
-    println!("{}", output);
+    let grid = grid::out(vector.clone());
+    println!("{}", grid)
 }
